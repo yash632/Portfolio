@@ -1,8 +1,10 @@
 import React from 'react'
+import Intract from './components/Intract'
+
 
 const App = () => {
   return (
-    <div>App</div>
+    <Intract />
   )
 }
 

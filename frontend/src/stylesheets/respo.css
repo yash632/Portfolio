@@ -1,0 +1,122 @@
+@media screen and (max-width: 612px) {
+  .home {
+    width: auto;
+  }
+
+  .create_post2,
+  .logout_btn {
+    display: none;
+  }
+  .nav_position {
+    width: 100%;
+  }
+
+  nav {
+    display: flex;
+  }
+
+  .nav {
+    display: flex;
+  }
+
+  footer {
+    display: flex;
+  }
+
+  .feed {
+    padding-bottom: 100px;
+    margin-top: calc(55px + 1vh);
+    height: calc(100vh - 55px - 55px);
+  }
+
+   .select_chatname{
+           display: none;
+            }
+}
+
+@media screen and (min-width: 612px) {
+  .profile_container {
+    width: 75vw;
+  }
+
+  .footer_position {
+    position: absolute;
+    left: 0;
+    top: 65px;
+    width: 25%;
+    /* background: rgb(192, 34, 44); */
+    background: rgb(0, 0, 0);
+    height: calc(100vh - 65px);
+  }
+
+  .nav_position {
+    top: 0;
+    left: 0;
+    width: 25%;
+    /* background: rgb(192, 34, 44); */
+    background: rgb(0, 0, 0);
+    height: 65px;
+  }
+
+  .nav {
+    /* background: rgb(192, 34, 44); */
+    background: rgb(0, 0, 0);
+  }
+
+  .create_post {
+    display: none;
+  }
+
+  nav {
+    width: 13vw;
+    /*width: auto;*/
+    height: calc(100vh - 65px);
+    /* background: rgb(192, 34, 44); */
+    background: rgb(0, 0, 0);
+    /*background: rgb(12, 12, 12);*/
+  }
+
+  nav ul {
+    height: 100%;
+    width: 100%;
+    /*width: auto;*/
+    /*background: rgb(192, 34, 44);*/
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav ul li .a {
+    display: block;
+  }
+
+  nav ul li .a .text {
+    top: 5%;
+    left: 93%;
+    font-size: 1.3em;
+  }
+
+  .indicator {
+    top: 0%;
+    width: 3px;
+    height: 50px;
+    background: #ffffff;
+    left: 10px;
+    transition: 0.5s;
+  }
+
+  nav ul li:nth-child(1).active ~ .indicator {
+    transform: translateY(calc(70px * 0));
+  }
+
+  nav ul li:nth-child(2).active ~ .indicator {
+    transform: translateY(calc(70px * 1));
+  }
+
+  nav ul li:nth-child(3).active ~ .indicator {
+    transform: translateY(calc(70px * 2));
+  }
+
+  nav ul li:nth-child(4).active ~ .indicator {
+    transform: translateY(calc(70px * 3));
+  }
+}
