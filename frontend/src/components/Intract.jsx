@@ -89,108 +89,52 @@ const Intract = () => {
           <footer>
             <nav>
               <ul>
-                <li
-                  className={`list ${
-                    location.pathname === "/home" ? "active" : ""
-                  }`}
-                >
+                <li className={`list ${location.pathname === "/home" ? "active" : ""}`}>
                   <Link to="/home" className="a">
                     <span className="icon">
-                      <img src="./img/home.svg" alt="home" className="invert" />
+                      <ion-icon name="home-outline"></ion-icon>
                     </span>
                     <span className="text">Home</span>
                   </Link>
                 </li>
 
-                <li
-                  className={`list ${
-                    location.pathname === "/message" ? "active" : ""
-                  }`}
-                >
-                  <Link to="/message" className="a">
+                <li className={`list ${location.pathname === "/about" ? "active" : ""}`}>
+                  <Link to="/about" className="a">
                     <span className="icon">
-                      <img src="./img/msg.svg" alt="message" className="invert" />
+                       <ion-icon name="information-circle-outline"></ion-icon>
                     </span>
-                    <span className="text">Message</span>
+                    <span className="text">About</span>
                   </Link>
                 </li>
 
-                <li
-                  className={`list ${
-                    location.pathname === "/search" ? "active" : ""
-                  }`}
-                >
-                  <Link to="/search" className="a">
+                <li className={`list ${location.pathname === "/resume" ? "active" : ""}`}>
+                  <Link to="/resume" className="a">
                     <span className="icon">
-                      <img
-                        src="./img/search.svg"
-                        alt="search"
-                        className="invert"
-                      />
+                      <ion-icon name="document-text-outline"></ion-icon>
                     </span>
-                    <span className="text">Search</span>
+                    <span className="text">Resume</span>
                   </Link>
                 </li>
 
-                <li
-                  className={`list ${
-                    location.pathname === "/profile" ? "active" : ""
-                  }`}
-                >
-                  <Link to="/profile" className="a">
+                <li className={`list ${location.pathname === "/project" ? "active" : ""}`}>
+                  <Link to="/project" className="a">
                     <span className="icon">
-                      <img
-                        src="./img/profile.svg"
-                        alt="profile"
-                        className="invert"
-                      />
+                      <ion-icon name="code-outline"></ion-icon>
                     </span>
-                    <span className="text">Profile</span>
+                    <span className="text">Projects</span>
                   </Link>
                 </li>
 
-                <div className="indicator"></div>
-
-                <Link
-                  to="/create_post"
-                  className="create_post2"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <div>
-                    <img src="./img/add.svg" alt="create post" />
-                  </div>
-                  <Typography
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                      fontSize: "1vmax",
-                      fontWeight: "bolder",
-                      fontFamily: "Gilroy-Bold",
-                    }}
-                  >
-                    Post
-                  </Typography>
-                </Link>
-
-                <Link
-                  className="logout_btn"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <div>
-                    <img src="./img/logout.svg" alt="logout" />
-                  </div>
-                  <Typography
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                      fontSize: "1vmax",
-                      fontWeight: "bolder",
-                      fontFamily: "Gilroy-Bold",
-                    }}
-                  >
-                    LogOut
-                  </Typography>
-                </Link>
+                <li className={`list ${location.pathname === "/contact" ? "active" : ""}`}>
+                  <Link to="/contact" className="a">
+                    <span className="icon">
+                      <ion-icon name="call-outline"></ion-icon>
+                    </span>
+                    <span className="text">Contact</span>
+                  </Link>
+                </li>
+                
+                {/* indicator removed */}
               </ul>
             </nav>
           </footer>

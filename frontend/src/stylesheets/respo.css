@@ -7,6 +7,7 @@
   .logout_btn {
     display: none;
   }
+
   .nav_position {
     width: 100%;
   }
@@ -29,9 +30,9 @@
     height: calc(100vh - 55px - 55px);
   }
 
-   .select_chatname{
-           display: none;
-            }
+  .select_chatname {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 612px) {
@@ -104,19 +105,23 @@
     transition: 0.5s;
   }
 
-  nav ul li:nth-child(1).active ~ .indicator {
+  nav ul li:nth-child(1).active~.indicator {
     transform: translateY(calc(70px * 0));
   }
 
-  nav ul li:nth-child(2).active ~ .indicator {
+  nav ul li:nth-child(2).active~.indicator {
     transform: translateY(calc(70px * 1));
   }
 
-  nav ul li:nth-child(3).active ~ .indicator {
+  nav ul li:nth-child(3).active~.indicator {
     transform: translateY(calc(70px * 2));
   }
 
-  nav ul li:nth-child(4).active ~ .indicator {
+  nav ul li:nth-child(4).active~.indicator {
     transform: translateY(calc(70px * 3));
+  }
+
+  nav ul li:nth-child(5).active~.indicator {
+    transform: translateY(calc(70px * 4));
   }
 }
