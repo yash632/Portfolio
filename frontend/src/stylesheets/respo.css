@@ -33,6 +33,26 @@
   .select_chatname {
     display: none;
   }
+
+  .typed_js {
+    width: 90% !important;
+    margin-left: 5% !important;
+    margin-top: 45vh;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .text_block h1 {
+    font-size: 1.8rem;
+  }
+
+  .text_block .sub_text {
+    font-size: 1.2rem;
+  }
+
+  .typing_text {
+    font-size: 1.5rem;
+  }
 }
 
 @media screen and (min-width: 612px) {

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Typography } from "@mui/material";
 import "../stylesheets/style.css";
 import "../stylesheets/respo.css";
 
@@ -85,7 +84,7 @@ const Intract = () => {
           <Outlet />
         </div>
 
-\        <div className="footer_position" ref={footerNav}>
+        <div className="footer_position" ref={footerNav}>
           <footer>
             <nav>
               <ul>
