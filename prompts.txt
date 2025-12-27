@@ -1,0 +1,48 @@
+
+# AI / Brain Icons
+Prompt: A futuristic 3D icon of Neural Core, featuring a glowing central processing unit with synaptic connections, cyan and magenta neon colors, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of AI Brain, featuring glowing cybernetic details and neon lines, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Neural Matrix, featuring a complex grid of glowing nodes, cyan and magenta colors, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Neural Grid, featuring an interconnected lattice of light, cyan and magenta neon, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Synaptic Network, featuring web-like glowing connections, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Cognitive Field, featuring a spherical data cloud, glowing cyan and magenta particles, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Intelligence Core, featuring a concentrated glowing orb of data, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Mind Mesh, featuring an interwoven net of digital fibers, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Digital Cortex, featuring a structured digital brain interface, cyan and magenta circuits, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Synthetic Brain, featuring a metallic and glass artificial brain structure, glowing cyan and magenta internals, isolated on a black background, high resolution, cyberpunk style.
+
+# Network / Connections Icons
+Prompt: A futuristic 3D icon of Neural Links, featuring two or more nodes connecting with energy beams, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Synapse Flow, featuring streaming data along a neural pathway, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Data Nodes, featuring clusters of glowing data points connected by lines, cyan and magenta colors, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Connection Graph, featuring nodes and edges mapping a network, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Signal Paths, featuring traces of light moving through a circuit, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Network Topology, featuring a 3D structural map of interlinked systems, cyan and magenta neon, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Information Flow, featuring a dynamic stream of binary code or data packets, cyan and magenta motion blur, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Node Cluster, featuring a dense group of interconnected glowing hubs, cyan and magenta light, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Dynamic Links, featuring moving energy bridges between platforms, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Intelligence Web, featuring a spiderweb-like digital network, cyan and magenta glowing strands, isolated on a black background, high resolution, cyberpunk style.
+
+# Motion / Energy Icons
+Prompt: A futuristic 3D icon of Data Stream, featuring a rushing river of digital information, cyan and magenta light beams, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Energy Pulse, featuring a radiating ring of shockwave energy, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Signal Wave, featuring an oscillating waveform of light, cyan and magenta neon, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Quantum Flow, featuring swirling subatomic particles and energy trails, cyan and magenta colors, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Pulse Field, featuring an expanding magnetic or energetic field, cyan and magenta gradients, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Flux Motion, featuring flowing liquid-like digital energy, cyan and magenta highlights, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Dynamic Energy, featuring chaotic yet beautiful electrical arcs, cyan and magenta sparks, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Wave Propagation, featuring ripples of digital signal spreading out, cyan and magenta neon, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Digital Pulse, featuring a heartbeat-like line of digital spiked data, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Neural Activity, featuring firing synapses and sparks of thought, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+
+# Futuristic / Tech Icons
+Prompt: A futuristic 3D icon of Cyber Space, featuring an infinite perspective grid and floating data blocks, cyan and magenta neon, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Digital Realm, featuring a portal or gateway to a digital world, cyan and magenta energy, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Virtual Intelligence, featuring a holographic avatar or face formed by data, cyan and magenta light, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Tech Grid, featuring a hexagonal or square circuit floor pattern, cyan and magenta glowing lines, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Future Interface, featuring floating UI elements and HUD displays, cyan and magenta graphics, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of AI Dimension, featuring abstract geometric shapes floating in void, cyan and magenta lighting, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of System Core, featuring a heavy industrial sci-fi server or reactor, cyan and magenta vents/lights, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Virtual Neural Space, featuring a 3D environment connecting neurons and tech, cyan and magenta atmosphere, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Machine Consciousness, featuring a lens or eye opening with digital iris, cyan and magenta glow, isolated on a black background, high resolution, cyberpunk style.
+Prompt: A futuristic 3D icon of Synthetic Reality, featuring glitching digital objects transitioning to real, cyan and magenta distortion, isolated on a black background, high resolution, cyberpunk style.

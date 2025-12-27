@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "../stylesheets/style.css";
 import "../stylesheets/respo.css";
+import Hero3D from "./Hero3D";
 
 const Intract = () => {
   const location = useLocation();
@@ -60,24 +61,25 @@ const Intract = () => {
     <>
       <div className="loading">
         <img
-          src="./img/fulllogohb.png"
+          src="./img/yr_logo.png"
           alt="HennaBliss logo"
           className="logo_henna"
         />
       </div>
 
       <div className="container" style={{ display: "none" }}>
+        <Hero3D isMobile={windowWidth <= 768} />
         <div className="home">
           <div className="nav_position" ref={nav}>
             <div className="nav">
-              <Link to={"/landing"}>
+              <Link className="sign_link" to={"/landing"}>
                 <div className="logo">
-                  <img src="./img/HennaBliss_wordMark.png" height="55" alt="" />
+                  <span className="logo-signature">Yash Rathore</span>
                 </div>
               </Link>
-              <Link to="/create_post" className="create_post">
+              {/* <Link to="/create_post" className="create_post">
                 <img src="./img/add.svg" alt="create" />
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -100,7 +102,7 @@ const Intract = () => {
                 <li className={`list ${location.pathname === "/about" ? "active" : ""}`}>
                   <Link to="/about" className="a">
                     <span className="icon">
-                       <ion-icon name="information-circle-outline"></ion-icon>
+                      <ion-icon name="information-circle-outline"></ion-icon>
                     </span>
                     <span className="text">About</span>
                   </Link>
@@ -132,8 +134,8 @@ const Intract = () => {
                     <span className="text">Contact</span>
                   </Link>
                 </li>
-                
-                {/* indicator removed */}
+
+                <div className="indicator"></div>
               </ul>
             </nav>
           </footer>

@@ -1,107 +1,218 @@
-@media screen and (max-width: 612px) {
-  .home {
-    width: auto;
-  }
+@media screen and (max-width: 880px) {
 
-  .create_post2,
-  .logout_btn {
-    display: none;
-  }
-
+  /* NAV - Applies to Tablet & Mobile */
   .nav_position {
     width: 100%;
+    z-index: 10;
+    /* background: transparent; */
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
   }
 
-  nav {
-    display: flex;
-  }
-
-  .nav {
-    display: flex;
-  }
-
+  nav,
+  .nav,
   footer {
     display: flex;
   }
 
-  .feed {
-    padding-bottom: 100px;
-    margin-top: calc(55px + 1vh);
-    height: calc(100vh - 55px - 55px);
+  .home {
+    width: 100%;
   }
 
-  .select_chatname {
-    display: none;
-  }
-
-  .typed_js {
-    width: 90% !important;
-    margin-left: 5% !important;
-    margin-top: 45vh;
-    align-items: center !important;
-    text-align: center !important;
-  }
-
-  .text_block h1 {
-    font-size: 1.8rem;
-  }
-
-  .text_block .sub_text {
-    font-size: 1.2rem;
-  }
-
-  .typing_text {
-    font-size: 1.5rem;
+  /* CONTENT CONTAINERS - Full Width when Sidebar is gone */
+  .mcontainer,
+  .rcontainer,
+  .acontainer,
+  .acontact_body {
+    width: 100vw !important;
+    margin-left: 0;
+    margin-top: 60px;
   }
 }
 
-@media screen and (min-width: 612px) {
+@media screen and (max-width: 612px) {
+
+  .home {
+    width: auto;
+  }
+
+  /* HERO CONTENT - Full Screen Text */
+  .front_content {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .dev_img {
+    display: none !important;
+  }
+
+  /* Keep third_img visible but adjust if needed, or hide if requested. 
+     User wanted "design responsive", implying visibility. 
+     The original code hid it. Let's make it visible but smaller or stack it.
+     Actually, original code had display: none !important. 
+     To make it responsive and visible as per "responsive design" request, we should show it.
+  */
+  .third_img {
+    display: flex !important;
+    width: 280px;
+    height: 280px;
+    margin: 20px auto;
+  }
+
+  .content_overlay {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  .typed_js {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    padding: 20px !important;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .text_block {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .text_block h1 {
+    font-size: 5vh;
+    line-height: 1.2;
+    text-align: center;
+    margin: 0;
+    width: 100%;
+  }
+
+  .text_block h1 .name {
+    display: block;
+    margin-top: 2vh;
+    font-size: 8vh;
+    line-height: 1.1;
+    width: 100%;
+  }
+
+  .sub_text {
+    font-size: 3.5vh;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .typing_text {
+    font-size: 6vh;
+    min-height: 6vh;
+    text-align: center;
+    margin-top: 1vh;
+    width: 100%;
+    color: var(--brown);
+  }
+
+  .r1l_cont {
+    flex-direction: column;
+  }
+
+  .span1,
+  .span2,
+  .con_section,
+  .con_photo {
+    width: 100%;
+    padding: 0;
+  }
+
+  .box {
+    width: 50vw;
+  }
+
+  /* Why Hire Me - Mobile Adjustments */
+  .third_content {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px;
+    width: 95%;
+    margin: 40px auto;
+  }
+
+  .third_text {
+    text-align: center;
+    /* Center align on mobile */
+    align-items: center;
+  }
+
+  .third_text>div:first-child {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .third_text .p {
+    text-align: center;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (min-width: 881px) {
+
   .profile_container {
     width: 75vw;
   }
 
-  .footer_position {
-    position: absolute;
-    left: 0;
-    top: 65px;
-    width: 25%;
-    /* background: rgb(192, 34, 44); */
-    background: rgb(0, 0, 0);
-    height: calc(100vh - 65px);
-  }
-
+  /* NAV + SIDEBAR */
   .nav_position {
     top: 0;
     left: 0;
     width: 25%;
-    /* background: rgb(192, 34, 44); */
-    background: rgb(0, 0, 0);
     height: 65px;
+    background: #000;
   }
 
-  .nav {
-    /* background: rgb(192, 34, 44); */
-    background: rgb(0, 0, 0);
-  }
-
-  .create_post {
-    display: none;
+  .footer_position {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    width: 25%;
+    height: calc(100vh - 65px);
   }
 
   nav {
     width: 13vw;
-    /*width: auto;*/
     height: calc(100vh - 65px);
-    /* background: rgb(192, 34, 44); */
-    background: rgb(0, 0, 0);
-    /*background: rgb(12, 12, 12);*/
   }
 
   nav ul {
     height: 100%;
-    width: 100%;
-    /*width: auto;*/
-    /*background: rgb(192, 34, 44);*/
     display: flex;
     flex-direction: column;
   }
@@ -117,11 +228,11 @@
   }
 
   .indicator {
-    top: 0%;
+    top: 0;
+    left: 10px;
     width: 3px;
     height: 50px;
-    background: #ffffff;
-    left: 10px;
+    background: #fff;
     transition: 0.5s;
   }
 
@@ -143,5 +254,23 @@
 
   nav ul li:nth-child(5).active~.indicator {
     transform: translateY(calc(70px * 4));
+  }
+
+  /* CONTENT SHIFT DUE TO SIDEBAR */
+  .mcontainer,
+  .rcontainer,
+  .acontainer,
+  .acontact_body {
+    width: 75vw !important;
+    padding-top: 20px;
+  }
+
+  .front_content {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding-bottom: 50px; */
   }
 }
