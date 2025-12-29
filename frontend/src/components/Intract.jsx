@@ -61,7 +61,7 @@ const Intract = () => {
     <>
       <div className="loading">
         <img
-          src="./img/yr_logo.png"
+          src="./img/yr_logo.webp"
           alt="HennaBliss logo"
           className="logo_henna"
         />

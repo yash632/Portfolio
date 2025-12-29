@@ -3,32 +3,66 @@ import React from 'react';
 const Contact = () => {
   return (
     <section id="contact" className="section active">
-      <div className="acontact_body">
-        <div className="acontact">
-          <div className="con_section">            
-              <h1>Contact Me</h1>
-              <ul>
-                  <li>
-                      <div>
-                          <a href="tel:+91 9109819310">Mobile No.</a>
-                      </div>
-                  </li>
-                  <li>
-                      <div>
-                          <a href="mailto: yashveers138@gmail.com">Gmail</a>
-                      </div>
-                  </li>
-                  <li>
-                      <div>
-                          <a href="https://www.linkedin.com/in/yash-rathore-3396b42a1?utm_source=share&utm_campaign=share_via&utm_content=profile" target="_blank" rel="noreferrer">LinkedIn</a>
-                      </div>
-                  </li>
-              </ul>
+      <div className="contact_container_new">
+        <div className="contact_header_content">
+          <h1 data-last-word="Me" className="about_heading">Contact Me</h1>
+          <div className="contact_avatar_glass">
+            <img src="img/MyImage3.webp" alt="Profile Logic" />
           </div>
-          <div className="con_photo">
-              <img src="https://i.ibb.co/Jn7gL1k/contact.jpg" alt="contact" className="con_img" onError={(e) => {e.target.style.display='none'}} />
-               {/* Fallback */}
-              <ion-icon name="chatbubbles" style={{fontSize: '80px', color: 'var(--brown)', display: 'none'}}></ion-icon>
+        </div>
+
+        <div className="contact_content_wrapper">
+          <p className="contact_subtext">
+            Feel free to reach out for collaborations, opportunities, or just a friendly hello!
+          </p>
+
+          <div className="contact_grid">
+
+            {/* Phone Card */}
+            <a href="tel:+919109819310" className="contact_card glass_card">
+              <div className="icon_box">
+                <ion-icon name="call"></ion-icon>
+              </div>
+              <h3>Phone</h3>
+              <p>+91 9109819310</p>
+            </a>
+
+            {/* Email Card */}
+            <a href="mailto:yashveers138@gmail.com" className="contact_card glass_card">
+              <div className="icon_box">
+                <ion-icon name="mail"></ion-icon>
+              </div>
+              <h3>Email</h3>
+              <p>yashveers138@gmail.com</p>
+            </a>
+
+            {/* Location Card */}
+            <a href="https://goo.gl/maps/7MVPYpGfSH7dWHTV8" target="_blank" rel="noreferrer" className="contact_card glass_card">
+              <div className="icon_box">
+                <ion-icon name="location-sharp"></ion-icon>
+              </div>
+              <h3>Location</h3>
+              <p>Bhopal, Madhya Pradesh, India</p>
+            </a>
+
+            {/* LinkedIn Card */}
+            <a href="https://www.linkedin.com/in/yash-rathore-3396b42a1" target="_blank" rel="noreferrer" className="contact_card glass_card">
+              <div className="icon_box">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </div>
+              <h3>LinkedIn</h3>
+              <p>Connect with me</p>
+            </a>
+
+            {/* GitHub Card - Full Width */}
+            <a href="https://github.com/yash632" target="_blank" rel="noreferrer" className="contact_card glass_card full_width_card">
+              <div className="icon_box">
+                <ion-icon name="logo-github"></ion-icon>
+              </div>
+              <h3>GitHub</h3>
+              <p>Check out my Repositories</p>
+            </a>
+
           </div>
         </div>
       </div>

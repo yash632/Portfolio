@@ -3,18 +3,52 @@ import React from 'react';
 const About = () => {
   return (
     <section id="about" className="section active">
-       <div className="acontainer">
-        <h1 data-last-word="Me">About</h1>
-        <p>Hello! I'm <strong>Yash Rathore</strong>, a passionate front-end web developer with a knack for creating visually appealing and user-friendly websites. Although I have full-stack development skills, my true interest lies in front-end development, where I can bring my creativity and technical expertise to life.</p>
-        <p>I'm currently pursuing a Bachelor's degree at JNCT, LNCT Group Of Colleges, which is affiliated with RGPV University. My technical proficiency includes:</p>
-        <ul>
-            <li><strong>Web Development:</strong> <div>HTML, CSS, JavaScript, Node.js, Express.js, Mongodb</div></li>
-            <li><strong>Programming Languages:</strong> <div>C++, Python</div></li>
-            <li><strong>Other Skills:</strong> <div>Data Science with Python</div></li>
-        </ul>
-        <p>One of my notable projects is <strong>BeatBlaast</strong>, a full-stack music streaming website. This project showcases my ability to integrate front-end and back-end technologies to create a seamless user experience.</p>
-        <p>My journey in the tech world has been driven by a desire to craft engaging digital experiences. I'm always eager to take on new challenges and collaborate on innovative projects.</p>
-    </div>
+      <div className="about_container">
+        <h1 data-last-word="Me" className="about_heading">About</h1>
+
+        <div className="about_content_wrapper">
+          <div className="about_card glass_card">
+            <p className="bio_text">
+              I’m <strong>Yash Rathore</strong>, a B.Tech student in Artificial Intelligence & Machine Learning and a hands-on MERN Stack developer.
+              I enjoy building intelligent, real-world systems where machine learning meets full-stack engineering.
+              My work spans computer vision, data science, and scalable web applications, with a strong focus on clean logic and practical impact.
+            </p>
+            <p className="bio_text">
+              I’ve built projects like real-time surveillance systems using <strong>YOLO</strong> and <strong>FaceNet</strong>,
+              AI-powered navigation for the visually impaired, and full-fledged web platforms for music streaming and local service discovery.
+              I don’t just train models—I design complete systems, from backend logic to frontend experience.
+              I’m always driven to learn, experiment, and turn complex ideas into reliable, usable products.
+            </p>
+          </div>
+
+          <div className="skills_grid">
+            <div className="skill_card glass_card">
+              <h3>Web Development</h3>
+              <p>MERN Stack (MongoDB, Express, React, Node.js), HTML, CSS, JavaScript, Flask, Socket.IO</p>
+            </div>
+
+            <div className="skill_card glass_card">
+              <h3>AI & ML</h3>
+              <p>YOLO, FaceNet, OpenCV, scikit-learn, Computer Vision, Deep Learning</p>
+            </div>
+
+            <div className="skill_card glass_card">
+              <h3>Data Science</h3>
+              <p>Python, NumPy, Pandas, Matplotlib, Data Visualization</p>
+            </div>
+
+            <div className="skill_card glass_card">
+              <h3>Languages</h3>
+              <p>Python, C++, JavaScript</p>
+            </div>
+
+            <div className="skill_card glass_card">
+              <h3>Tools & Platforms</h3>
+              <p>Git, GitHub, Cloudinary, VS Code</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
