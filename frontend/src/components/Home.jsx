@@ -43,9 +43,9 @@ const Home = () => {
 
         // Calculate visibility for titles (Front 3 items)
         Array.from(box.children).forEach((child, index) => {
-          // Index is 0-7. In CSS we used --i from 1-8. active logic is same.
-          // Base angle for item i: (i + 1) * 45
-          const itemAngle = (index + 1) * 45;
+          // Index is 0-5. In CSS we used --i from 1-6. active logic is same.
+          // Base angle for item i: (i + 1) * 60
+          const itemAngle = (index + 1) * 60;
           const currentRot = rotY.current;
 
           // Total effective angle in degrees
@@ -55,8 +55,8 @@ const Home = () => {
           const normalized = ((totalAngle % 360) + 360) % 360;
           const distFromFront = Math.min(normalized, 360 - normalized); // Distance from 0/360
 
-          // Condition: If within ~67.5 degrees (covers front 3: 0, +45, -45)
-          if (distFromFront < 60) {
+          // Condition: If within ~75 degrees (covers front 3: 0, +60, -60)
+          if (distFromFront < 75) {
             child.classList.add("active");
           } else {
             child.classList.remove("active");
@@ -156,90 +156,68 @@ const Home = () => {
           >
             <div className="box" ref={boxRef}>
               <span style={{ "--i": 1 }}>
-                <h6>PROJECTS</h6>
+                <h6>MACHINE LEARNING</h6>
                 <img
-                  src="./img/img1.webp"
-                  alt="p1"
+                  src="./services/ml.jpg"
+                  alt="ml"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+1";
+                      "https://placehold.co/300/1a1a1a/c9a035?text=ML";
                   }}
                 />
               </span>
               <span style={{ "--i": 2 }}>
-                <h6>PROJECTS</h6>
+                <h6>COMPUTER VISION</h6>
                 <img
-                  src="./img/img2.webp"
-                  alt="p2"
+                  src="./services/cv.png"
+                  alt="cv"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+2";
+                      "https://placehold.co/300/1a1a1a/c9a035?text=CV";
                   }}
                 />
               </span>
               <span style={{ "--i": 3 }}>
-                <h6>PROJECTS</h6>
+                <h6>FULL STACK</h6>
                 <img
-                  src="./img/img3.webp"
-                  alt="p3"
+                  src="./services/full.png"
+                  alt="fullstack"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+3";
+                      "https://placehold.co/300/1a1a1a/c9a035?text=FullStack";
                   }}
                 />
               </span>
               <span style={{ "--i": 4 }}>
-                <h6>PROJECTS</h6>
+                <h6>BACKEND DEV</h6>
                 <img
-                  src="./img/img5.webp"
-                  alt="p4"
+                  src="./services/backend.png"
+                  alt="backend"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+4";
+                      "https://placehold.co/300/1a1a1a/c9a035?text=Backend";
                   }}
                 />
               </span>
               <span style={{ "--i": 5 }}>
-                <h6>PROJECTS</h6>
+                <h6>PYTHON DEV</h6>
                 <img
-                  src="./img/img4.webp"
-                  alt="p5"
+                  src="./services/python_opt.png"
+                  alt="python"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+5";
+                      "https://placehold.co/300/1a1a1a/c9a035?text=Python";
                   }}
                 />
               </span>
               <span style={{ "--i": 6 }}>
-                <h6>PROJECTS</h6>
+                <h6>UI/UX DESIGN</h6>
                 <img
-                  src="./img/img6.webp"
-                  alt="p6"
+                  src="./services/ui.jpg"
+                  alt="ui"
                   onError={(e) => {
                     e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+6";
-                  }}
-                />
-              </span>
-              <span style={{ "--i": 7 }}>
-                <h6>PROJECTS</h6>
-                <img
-                  src="./img/img7.webp"
-                  alt="p7"
-                  onError={(e) => {
-                    e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+7";
-                  }}
-                />
-              </span>
-              <span style={{ "--i": 8 }}>
-                <h6>PROJECTS</h6>
-                <img
-                  src="./img/img8.webp"
-                  alt="p8"
-                  onError={(e) => {
-                    e.target.src =
-                      "https://placehold.co/300/1a1a1a/c9a035?text=Project+8";
+                      "https://placehold.co/300/1a1a1a/c9a035?text=UI/UX";
                   }}
                 />
               </span>

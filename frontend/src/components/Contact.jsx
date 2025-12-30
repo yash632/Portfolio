@@ -18,6 +18,15 @@ const Contact = () => {
 
           <div className="contact_grid">
 
+            {/* GitHub Card - Full Width */}
+            <a href="https://github.com/yash632" target="_blank" rel="noreferrer" className="contact_card glass_card full_width_card">
+              <div className="icon_box">
+                <ion-icon name="logo-github"></ion-icon>
+              </div>
+              <h3>GitHub</h3>
+              <p>Check out my Repositories</p>
+            </a>
+
             {/* Phone Card */}
             <a href="tel:+919109819310" className="contact_card glass_card">
               <div className="icon_box">
@@ -52,15 +61,6 @@ const Contact = () => {
               </div>
               <h3>LinkedIn</h3>
               <p>Connect with me</p>
-            </a>
-
-            {/* GitHub Card - Full Width */}
-            <a href="https://github.com/yash632" target="_blank" rel="noreferrer" className="contact_card glass_card full_width_card">
-              <div className="icon_box">
-                <ion-icon name="logo-github"></ion-icon>
-              </div>
-              <h3>GitHub</h3>
-              <p>Check out my Repositories</p>
             </a>
 
           </div>

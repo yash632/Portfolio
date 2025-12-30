@@ -5,9 +5,6 @@
 @import url("https://fonts.cdnfonts.com/css/gilroy-bold");
 @import url("https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css");
 
-/* =========================================================================
-   PRESERVED NAVBAR STYLES (DO NOT TOUCH AS REQUESTED)
-   ========================================================================= */
 * {
   margin: 0;
   padding: 0;
@@ -17,7 +14,6 @@
   scrollbar-color: #7c7cff rgba(255, 255, 255, 0.06);
 }
 
-/* Chrome, Edge, Safari */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -36,61 +32,29 @@
 }
 
 :root {
-  /* DARK THEME VARIABLES (AI Palette) */
   --f_bg: #020617;
-  /* Deep Navy Background */
   --bg: #0f172a;
-  /* Card Background */
   --brown: #38bdf8;
-  /* Replacing Gold with Electric Blue */
   --text-main: #ffffff;
   --text-muted: #94a3b8;
 
-  /* Preserving original vars for Navbar if used */
   --bg-color: #020617;
   --text-color: #ffffff;
   --accent-color: #38bdf8;
   --secondary-color: #1e293b;
 }
 
-/* NAVBAR & LAYOUT STRUCTURE */
 .container {
   width: 100vw;
-  height: 100vh;
   display: block;
-  /* Ensure it is visible */
-  overflow-y: auto;
-  overflow-x: hidden;
   background: transparent;
 }
 
-/* 
-.nav_position {
-  position: fixed;
-  top: 0px;
-  width: 100%;
-  height: 55px;
-  z-index: 1000;
-  background: transparent;
-} */
-
-/* .nav {
-  width: 90%;
-  color: #100f0f;
-  justify-content: space-between;
-  align-items: center;
-  margin: auto;
-} */
-/* .logo img {
-  height: calc(100vh - (100vh - 55px));
-  width: 16vw;
-} */
 .sign_link {
   text-decoration: none;
 }
 
 .sign_link {
-  /* width: 100%; */
   display: flex;
   align-items: center;
 }
@@ -98,7 +62,6 @@
 .logo-signature {
   font-family: "Great Vibes", cursive;
 
-  /* 🔥 magic line */
   font-size: clamp(1.2rem, 5vw, 2.5em);
 
   background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
@@ -108,11 +71,8 @@
   padding: 3px;
   font-weight: bolder;
   white-space: nowrap;
-  /* line break avoid */
   overflow: hidden;
-  /* overflow control */
   text-overflow: ellipsis;
-  /* optional */
   display: block;
 }
 
@@ -122,26 +82,17 @@
   margin: auto;
 }
 
-/* =========================================================================
-   USER PROVIDED CSS IMPLEMENTATION (Adapted for Dark Theme)
-   ========================================================================= */
-
-/* Overriding Body to be Dark */
 body {
   background: black;
-  /* background: var(--f_bg); */
   width: 100vw;
   height: 90vh;
   color: var(--text-main);
-  /* White text */
   overflow-x: hidden;
-  transition: none !important;
 }
 
 .mcontainer {
   position: relative;
   width: 100%;
-  /* User said 100vw but % is safer for avoiding horizontal scroll */
   margin: auto;
   transition: none !important;
   background: transparent;
@@ -156,36 +107,8 @@ body {
   height: 20px;
   width: 98vw;
   background-color: transparent;
-  /* Hidden in dark mode preference */
 }
 
-/* Nav Element Styles (If used within pages) */
-/* .nav_home,
-.nav_about,
-.nav_resume,
-.nav_poject,
-.nav_contact {
-  padding: 5px 10px 5px 10px;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background-color 0.7s ease;
-  color: white;
-} */
-
-/* .nav_span {
-  background-color: var(--brown);
-}
-
-.nav_element {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  list-style: none;
-  height: 40px;
-  width: 50vw;
-} */
-
-/* FRONT CONTENT (HERO) */
 .content_overlay {
   z-index: 2;
   display: flex;
@@ -193,22 +116,8 @@ body {
   height: 100%;
   justify-content: space-evenly;
   align-items: center;
-  /* flex-wrap: wrap; */
   padding: 20px 20px 0 20px;
 }
-
-/* 
-.front_content {
-  background: transparent;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100vh;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-} */
 
 .dev_img {
   height: 100vh;
@@ -216,15 +125,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  /* Align to bottom for person image */
   position: relative;
   z-index: 0;
   flex-shrink: 0;
-  /* overflow: hidden; */
 }
 
 .my_img {
-  /* max-width: 100%; */
   height: 100vh;
   width: auto;
   object-fit: contain;
@@ -236,15 +142,12 @@ body {
   width: 90%;
   max-width: 600px;
   display: flex;
-  /* flex-direction: column; */
   justify-content: flex-start;
   align-items: center;
   line-height: 1.2;
-  /* padding: 6rem 3rem 3rem 3rem; */
   color: var(--text-main);
   z-index: 3;
   text-align: left;
-  /* flex-shrink: 0; */
 }
 
 .text_block h1 {
@@ -275,11 +178,9 @@ body {
   line-height: 1.3;
   padding: 5px 0;
   min-height: 4rem;
-  /* Slightly larger to safely cover wrapping if it occurs */
   vertical-align: middle;
 }
 
-/* Remove old Center/Glass styles */
 .glass_effect {
   display: none;
 }
@@ -302,11 +203,12 @@ body {
 .second_content {
   width: 100%;
   padding: 50px 0;
-  /* Add padding instead of min-height */
   position: relative;
   font-size: 2rem;
-  /* reduced from 4.8vw */
-  background: linear-gradient(180deg, var(--f_bg) 0%, rgba(2, 6, 23, 0.8) 70%, rgba(2, 6, 23, 0) 100%);
+  background: linear-gradient(180deg,
+      var(--f_bg) 0%,
+      rgba(2, 6, 23, 0.8) 70%,
+      rgba(2, 6, 23, 0) 100%);
   border-top: 2px solid #333;
   border-top-left-radius: 30px;
 }
@@ -328,7 +230,6 @@ body {
   align-items: center;
   width: 100%;
   min-height: 500px;
-  /* Fixed reasonable height */
   margin: 0 auto;
   overflow: hidden;
   border-bottom: 2px solid #333;
@@ -337,13 +238,12 @@ body {
 
 .box {
   position: relative;
-  width: 250px;
-  /* Increased size slightly */
+  --card-size: min(250px, 45vw);
+  width: var(--card-size);
   aspect-ratio: 1/1;
   transform-style: preserve-3d;
-  animation: animate 25s linear infinite;
+  will-change: transform;
   transform: rotateX(-5deg) rotateY(-10deg);
-  /* Initial angle */
 }
 
 @keyframes animate {
@@ -364,48 +264,39 @@ body {
   height: 100%;
   transform-origin: center;
   transform-style: preserve-3d;
-  transform: rotateY(calc(var(--i) * 45deg)) translateZ(350px);
-  /* Increased radius slightly */
-  backface-visibility: hidden;
-  /* Only show when facing forward */
-  -webkit-backface-visibility: hidden;
-}
-
-/* Keyframe for h6 rotation visibility */
-@keyframes h6_rotation {
-  1% {
-    opacity: 1;
-  }
-
-  10% {
-    opacity: 0;
-  }
-
-  40% {
-    opacity: 0;
-  }
-
-  60% {
-    opacity: 0;
-  }
-
-  80% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+  transform: rotateY(calc(var(--i) * 60deg)) translateZ(calc(var(--card-size) * 1.05));
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .box span h6 {
   position: absolute;
-  bottom: -20px;
+  top: auto;
+  bottom: 0;
   width: 100%;
   text-align: center;
   color: white;
-  animation: h6_rotation 20s linear infinite;
-  font-size: 1.5vw;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 10px 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  z-index: 10;
+}
+
+.box span.active h6 {
+  opacity: 1;
 }
 
 .box span img {
@@ -413,72 +304,48 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  /* Filled */
   width: 100%;
-  border: 2px solid var(--brown);
-  border-radius: 2vw;
+  border-radius: 20px;
   object-fit: cover;
+  pointer-events: none;
 }
 
 /* THIRD CONTENT */
 .third_content {
   min-height: 400px;
   width: 90%;
-  /* background: var(--bg); */
   background: rgba(255, 255, 255, 0.03);
-  /* Subtle Glass */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  /* Dark card */
   display: flex;
   justify-content: center;
   align-items: center;
   border-bottom-right-radius: 60px;
   border-top-left-radius: 60px;
   margin: 80px auto;
-  /* Increased margin */
   border: 1px solid rgba(56, 189, 248, 0.3);
-  /* Subtle blue border */
   box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
   color: var(--text-main);
   font-size: 1.5rem;
   padding: 50px;
   flex-wrap: wrap;
-  /* Ensure wrapping on smaller screens */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* .third_content:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
-} */
-
-
 .third_img {
-  /* background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(168, 85, 247, 0.1)); */
-  /* White bg for image contrast */
-  /* border-radius: 50%; */
   display: flex;
   justify-content: center;
   align-items: center;
   width: 400px;
-  /* Slightly larger for the sphere */
   height: 400px;
-  /* padding: 20px; */
-  /* border: 2px solid rgba(56, 189, 248, 0.3); */
-  /* Neon Border */
-  /* box-shadow: 0 0 25px rgba(56, 189, 248, 0.2); */
-  /* margin: 20px; */
   position: relative;
   overflow: visible;
-  /* Ensure canvas stays inside circle */
 }
 
-/* Ensure Canvas takes full size */
 .third_img canvas {
   width: 100% !important;
   height: 100% !important;
-  /* border-radius: 50%; */
+  cursor: grab;
 }
 
 .my_img3 {
@@ -494,7 +361,6 @@ body {
   padding: 20px;
   max-width: 600px;
   text-align: left;
-  /* Better readability */
 }
 
 .third_text>div:first-child {
@@ -505,7 +371,6 @@ body {
 
 .third_text .p {
   font-size: 1.3rem;
-  /* Slightly smaller for density */
   line-height: 1.6;
   color: var(--text-muted);
   font-weight: 300;
@@ -524,34 +389,28 @@ body {
   color: var(--brown);
 }
 
-/* FOOTER */
-footer {
+.nav_footer {
   width: 100%;
-  /* background-color: black;
-  margin-bottom: 1px;
-  padding-bottom: 100px; */
 }
 
-/* FOOTER - LETS CONNECT SECTION */
-/* Targeting specifically via class as requested */
 .con_footer {
   width: 100%;
   padding-bottom: 50px;
   position: relative;
-  /* z-index: 10; */
   margin-top: 80px;
 }
 
-/* Background glow behind the footer */
 .con_footer::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 80%;
   height: 80%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle,
+      rgba(56, 189, 248, 0.15) 0%,
+      transparent 70%);
   z-index: -1;
   pointer-events: none;
 }
@@ -560,13 +419,11 @@ footer {
   text-align: center;
   font-size: 3rem;
   padding: 30px 20px;
-  /* Radiant Gradient Text */
   background: linear-gradient(to right, #ffffff, #38bdf8, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-family: 'Bodoni Moda', serif;
-  /* Or user's preference if different */
+  font-family: "Bodoni Moda", serif;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 4px;
@@ -577,12 +434,9 @@ footer {
 .footer_content {
   display: flex;
   justify-content: space-between;
-  /* Spread content */
   align-items: stretch;
-  /* Match height of form and button */
   gap: 20px;
   padding: 40px;
-  /* Ultra-Premium Glassmorphism */
   background: rgba(10, 10, 15, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -591,7 +445,8 @@ footer {
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(56, 189, 248, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.1);
   position: relative;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -599,12 +454,12 @@ footer {
 
 .footer_content:hover {
   transform: translateY(-5px);
-  box-shadow: 0 30px 60px rgba(56, 189, 248, 0.15), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 30px 60px rgba(56, 189, 248, 0.15),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.3);
 }
 
 .send_box {
   flex: 1;
-  /* TAKE REMAINING WIDTH */
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -618,7 +473,6 @@ footer {
 
 .form_container input {
   flex: 1;
-  /* Distribute input width equally */
   min-width: 0;
 }
 
@@ -632,7 +486,7 @@ textarea {
   font-size: 1.1rem;
   transition: all 0.3s ease;
   outline: none;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 input::placeholder,
@@ -653,10 +507,9 @@ textarea {
   min-height: 150px;
   resize: none;
   flex-grow: 1;
-  /* Fill vertical space if possible */
+  margin-top: 20px;
 }
 
-/* "Please note" tex styling */
 .send_box h6 {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.5);
@@ -667,10 +520,9 @@ textarea {
 
 .send_box h6 p {
   display: block;
-  /* Move to next line */
   color: #38bdf8 !important;
   /* Cyan */
-  font-family: 'Great Vibes', cursive;
+  font-family: "Great Vibes", cursive;
   /* Signature font */
   font-size: 1.5rem;
   /* Larger for signature look */
@@ -678,10 +530,8 @@ textarea {
   font-weight: 400;
 }
 
-/* STANDARD SEND BUTTON */
 .send_btn {
   width: 120px;
-  /* Wider button for impact */
   background: transparent;
   position: relative;
   border: 2px solid #38bdf8;
@@ -697,17 +547,13 @@ textarea {
   transition: all 0.3s ease;
   overflow: hidden;
   box-shadow: none;
-  /* Removed initial glow */
   flex-shrink: 0;
-  /* Prevent shrinking */
 }
 
-/* Simple hover effect: Fill with color */
 .send_btn:hover {
   background: #38bdf8;
   color: #000;
   box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-  /* Very subtle depth, not funky glow */
   transform: translateY(-2px);
 }
 
@@ -715,7 +561,6 @@ textarea {
   margin: 3px 0;
 }
 
-/* Responsiveness */
 @media (max-width: 900px) {
   .footer_content {
     flex-direction: column;
@@ -728,7 +573,6 @@ textarea {
     flex-direction: row;
     border-width: 1px;
     background: linear-gradient(90deg, #38bdf8 0%, #a855f7 100%);
-    /* Full fill on mobile */
     border: none;
   }
 
@@ -893,7 +737,6 @@ textarea {
   font-weight: bold;
 }
 
-/* CONTACT PAGE - .acontact */
 .acontact_body {
   background: transparent;
   min-height: 100vh;
@@ -943,9 +786,6 @@ textarea {
   font-size: 1.2rem;
 }
 
-/* Ensure no display:none blocks everything unexpectedly */
-
-/* PORTFOLIO SECTION */
 .portfolio-container {
   width: 90%;
   max-width: 1400px;
@@ -971,7 +811,6 @@ textarea {
   display: flex;
   flex-direction: column;
   position: relative;
-  /* group: hover; */
 }
 
 .project-card:hover {
@@ -1022,7 +861,6 @@ textarea {
   font-weight: bold;
   padding: 10px 25px;
   border: 2px solid var(--brown);
-  /* Electric Blue */
   border-radius: 30px;
   background: rgba(56, 189, 248, 0.2);
   backdrop-filter: blur(5px);
@@ -1066,7 +904,6 @@ textarea {
   border: 1px solid rgba(56, 189, 248, 0.2);
 }
 
-/* Response fix for smaller screens */
 @media (max-width: 768px) {
   .portfolio-grid {
     grid-template-columns: 1fr;
@@ -1075,8 +912,6 @@ textarea {
 }
 
 .section {
-  /* position: relative;
-  left: 4px; */
   width: 100%;
 }
 
@@ -1098,90 +933,58 @@ textarea {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* To hide any overflow during the zoom animation */
 }
 
-.loading .logo_henna {
+.loading .logo_sign {
   width: 50vw;
-  /* Initial size of the element */
   height: auto;
   transform: scale(0);
-  /* Start with scale 0 for zoom-in effect */
 }
 
 @keyframes zoomInOut {
   0% {
     transform: scale(0);
-    /* Start from 0 scale */
     opacity: 0;
-    /* Start with opacity 0 for a fade-in effect */
   }
 
   50% {
     transform: scale(2);
-    /* Full size at the midpoint */
     opacity: 1;
-    /* Fully visible */
   }
 
   100% {
     transform: scale(0);
-    /* Scale back to 0 for zoom-out */
     opacity: 0;
-    /* Fade out as it zooms out */
   }
 }
 
 .logo_henna {
   animation: zoomInOut 1.5s ease-in-out forwards;
-  /* Smooth timing and a longer duration */
 }
-
-/* 
-:root {
-  --bg-color: #0d0d0d;
-  --text-color: #ffffff;
-  --accent-color: #00f3ff;
-  --secondary-color: #1a1a1a;
-  --font-main: 'Poppins', sans-serif;
-  --font-alt: 'Bodoni Moda', serif;
-} */
 
 .container {
   width: 100vw;
-  height: 100vh;
-  /* background: rgba(255, 244, 227, 1); */
   background: transparent;
   color: var(--text-color);
   display: none;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .nav_position {
   position: fixed;
   top: 0px;
   width: 50%;
-  /* background-color: rgb(255, 255, 255);*/
   height: 55px;
 }
 
 .nav {
-  /* position: fixed; */
   width: 90%;
-  /* background: rgb(0, 0, 0); */
-  /* background: linear-gradient(90deg, #c9d1ff, #fec4ff); */
   color: #100f0f;
-  /* padding: 12px; */
-  /*display: none;*/
   justify-content: space-between;
   align-items: center;
   margin: auto;
 }
 
 .home {
-  /*background-color: rgb(255, 255, 255);*/
-  /*background:linear-gradient(90deg, #e1ddfe, #f7e2e9);*/
   background: transparent;
   height: 100vh;
   width: 50%;
@@ -1194,19 +997,14 @@ textarea {
   bottom: 0;
 }
 
-footer {
+.nav_footer {
   justify-content: center;
   align-items: center;
-  /* height: calc(72px + 25px); */
-  /* background: var(--clr); */
-  /* border-radius: 5px; */
 
   line-height: 1.2;
   background: rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  /* border: 1px solid rgba(56, 189, 248, 0.2); */
-  /* border-radius: 20px; */
   color: var(--text-main);
   text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
   box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.1);
@@ -1216,21 +1014,10 @@ footer {
   --clr: #ffffff;
 }
 
-/* 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: var(--clr);
-} */
-
 nav {
   position: relative;
   width: 100vw;
   height: 72px;
-  /* background: #3b9678; */
-  /* background: rgb(0, 0, 0); */
   justify-content: space-evenly;
   align-items: center;
   border-top-left-radius: 10px;
@@ -1240,7 +1027,6 @@ nav {
 nav ul {
   display: flex;
   width: 350px;
-  /* Adjusted for 5 items */
 }
 
 nav ul li {
@@ -1273,7 +1059,6 @@ nav ul li .a .icon {
 }
 
 nav ul .active .a .icon {
-  /*transform: translateY(-39px);*/
   transform: translateY(-10px);
 }
 
@@ -1281,7 +1066,6 @@ nav ul li .a .text {
   position: absolute;
   top: 49%;
   color: var(--clr);
-  /* font-weight: 400; */
   font-size: 0.7em;
   letter-spacing: 0.05em;
   transition: 0.5s;
@@ -1292,7 +1076,6 @@ nav ul li .a .text {
 
 nav ul .active .a .text {
   opacity: 1;
-  /* font-weight: 100; */
   transform: translateY(5px);
   font-family: "Raleway", sans-serif;
   font-optical-sizing: auto;
@@ -1308,29 +1091,6 @@ nav ul .active .a .text {
   background: #ffffff;
   transition: 0.5s;
 }
-
-/* 
-.indicator::before,
-.indicator::after {
-  content: " ";
-  position: absolute;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  background: transparent;
-} */
-
-/* .indicator::before {
-  left: -22px;
-  border-top-right-radius: 20px;
-  box-shadow: 1px -10px 0 0 var(--clr);
-}
-
-.indicator::after {
-  right: -22px;
-  border-top-left-radius: 20px;
-  box-shadow: -1px -10px 0 0 var(--clr);
-} */
 
 nav ul li:nth-child(1).active~.indicator {
   transform: translateX(calc(70px * 0));
@@ -1352,22 +1112,13 @@ nav ul li:nth-child(5).active~.indicator {
   transform: translateX(calc(70px * 4));
 }
 
-/* nav ul li:nth-child(5).active ~ .indicator{
-  transform: translateX(calc(70px * 4));
-  } */
 .invert {
   filter: invert(1);
 }
 
 .customFont {
   font-family: "Gilroy-Regular", sans-serif !important;
-  /* font-size: 1.5rem; */
 }
-
-/* =========================================================================
-   TABLET RESPONSIVENESS (< 768px)
-   Requested: Remove image, strict full-viewport text centering
-   ========================================================================= */
 
 /* =========================================================================
    NEW ABOUT SECTION STYLES (Redesign)
@@ -1377,20 +1128,19 @@ nav ul li:nth-child(5).active~.indicator {
   max-width: 95vw;
   margin: 50px auto 100px auto;
   padding: 0 20px;
-  /* position: relative; */
-  /* z-index: 10; */
 }
 
-/* Background Glow for About Section */
 .about_container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
-  height: 90%;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+  height: 100%;
+  background: radial-gradient(circle,
+      rgba(168, 85, 247, 0.1) 0%,
+      transparent 70%);
   z-index: -1;
   pointer-events: none;
 }
@@ -1416,14 +1166,13 @@ nav ul li:nth-child(5).active~.indicator {
   align-items: center;
 }
 
-/* Glass Card Base Style */
 .glass_card {
   background: rgba(15, 23, 42, 0.6);
-  /* Deep blue/slate tint */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(56, 189, 248, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.1);
   border-radius: 30px;
   padding: 40px;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -1431,8 +1180,8 @@ nav ul li:nth-child(5).active~.indicator {
 
 .glass_card:hover {
   border-color: rgba(56, 189, 248, 0.3);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(56, 189, 248, 0.2);
-  /* transform: translateY(-5px); */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.2);
 }
 
 .about_card {
@@ -1464,7 +1213,6 @@ nav ul li:nth-child(5).active~.indicator {
   font-weight: 600;
 }
 
-/* Skills Grid */
 .skills_grid {
   display: flex;
   gap: 20px;
@@ -1482,7 +1230,6 @@ nav ul li:nth-child(5).active~.indicator {
   justify-content: center;
   text-align: center;
   background: rgba(15, 23, 42, 0.4);
-  /* Slightly darker */
 }
 
 .skill_card h3 {
@@ -1514,7 +1261,6 @@ nav ul li:nth-child(5).active~.indicator {
   gap: 40px;
   justify-content: center;
   flex-wrap: wrap;
-  /* Ensure stacking on smaller screens */
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -1537,10 +1283,8 @@ nav ul li:nth-child(5).active~.indicator {
 .resume_card {
   padding: 0;
   overflow: hidden;
-  /* Reuse glass_card but reset padding if needed, or keep consistent */
 }
 
-/* Timeline / Item Styles */
 .resume_item {
   position: relative;
   padding: 30px;
@@ -1556,9 +1300,8 @@ nav ul li:nth-child(5).active~.indicator {
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* Vertical line accent */
 .resume_item::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -1603,11 +1346,9 @@ nav ul li:nth-child(5).active~.indicator {
 .grade {
   font-size: 1rem;
   color: #a855f7;
-  /* Accent color */
   font-weight: 500;
 }
 
-/* Download Button Container */
 .download_btn_container {
   display: flex;
   justify-content: center;
@@ -1640,11 +1381,8 @@ nav ul li:nth-child(5).active~.indicator {
 
 .centered_column {
   max-width: 800px;
-  /* Limit width for better readability when single column */
   flex: none;
-  /* Disable flex-grow/shrink standard behavior */
   width: 100%;
-  /* Take full width up to max-width */
 }
 
 /* =========================================================================
@@ -1653,10 +1391,8 @@ nav ul li:nth-child(5).active~.indicator {
 
 .contact_container_new {
   max-width: 95vw;
-  margin: 50px auto 100px auto;
+  margin: 0px auto 100px auto;
   padding: 0 20px;
-  /* position: relative;
-  z-index: 10; */
 }
 
 .contact_content_wrapper {
@@ -1696,16 +1432,15 @@ nav ul li:nth-child(5).active~.indicator {
 .contact_card:hover {
   transform: translateY(-10px);
   background: rgba(15, 23, 42, 0.8);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.3);
 }
 
 .icon_box {
   font-size: 3rem;
   margin-bottom: 20px;
   color: #a855f7;
-  /* Solid purple match */
   filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.5));
-  /* Matching purple glow */
 }
 
 .contact_card h3 {
@@ -1719,7 +1454,6 @@ nav ul li:nth-child(5).active~.indicator {
   font-size: 1rem;
   color: var(--text-muted);
   word-break: break-all;
-  /* Ensure long emails don't overflow */
 }
 
 /* =========================================================================
@@ -1730,13 +1464,10 @@ nav ul li:nth-child(5).active~.indicator {
   max-width: 95vw;
   margin: 50px auto 100px auto;
   padding: 0 20px;
-  /* position: relative;
-  z-index: 10; */
 }
 
 .project_content_wrapper {
   max-width: 1300px;
-  /* Slightly wider for 3-column grid */
   margin: 0 auto;
 }
 
@@ -1757,7 +1488,8 @@ nav ul li:nth-child(5).active~.indicator {
 
 .project_card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.3);
 }
 
 .video_wrapper {
@@ -1778,13 +1510,11 @@ nav ul li:nth-child(5).active~.indicator {
 
 .project_card:hover video {
   transform: scale(1.05);
-  /* Subtle zoom effect on hover */
 }
 
 .project_info {
   padding: 25px;
   flex: 1;
-  /* Stretch to fill height */
   display: flex;
   flex-direction: column;
 }
@@ -1820,7 +1550,6 @@ nav ul li:nth-child(5).active~.indicator {
   white-space: nowrap;
 }
 
-/* Filter Tabs */
 .filter_container {
   display: flex;
   justify-content: center;
@@ -1849,7 +1578,6 @@ nav ul li:nth-child(5).active~.indicator {
   box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
 }
 
-/* Mixed Media Wrappers */
 .image_wrapper {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1877,18 +1605,17 @@ nav ul li:nth-child(5).active~.indicator {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .contact_avatar_glass {
   width: 80px;
-  height: 80px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   padding: 5px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-  /* Solid purple glow */
   overflow: hidden;
   transition: transform 0.3s ease;
 }
@@ -1905,7 +1632,6 @@ nav ul li:nth-child(5).active~.indicator {
   box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
 }
 
-/* Ensure Heading doesn't break layout */
 .contact_header_content .about_heading {
   margin-bottom: 0 !important;
 }
@@ -1914,5 +1640,4 @@ nav ul li:nth-child(5).active~.indicator {
   grid-column: 1 / -1;
   text-align: center;
   background: rgba(168, 85, 247, 0.05);
-  /* Subtle purple tint for emphasis */
 }

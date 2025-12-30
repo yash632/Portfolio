@@ -1,10 +1,8 @@
 @media screen and (max-width: 880px) {
 
-  /* NAV - Applies to Tablet & Mobile */
   .nav_position {
     width: 100%;
     z-index: 10;
-    /* background: transparent; */
     background: rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -12,7 +10,7 @@
 
   nav,
   .nav,
-  footer {
+  .nav_footer {
     display: flex;
   }
 
@@ -20,7 +18,6 @@
     width: 100%;
   }
 
-  /* CONTENT CONTAINERS - Full Width when Sidebar is gone */
   .mcontainer,
   .rcontainer,
   .acontainer,
@@ -34,6 +31,10 @@
     padding-bottom: 72px;
   }
 
+  .contact_container_new {
+    margin: 65px auto 100px auto;
+  }
+
 }
 
 @media screen and (max-width: 612px) {
@@ -42,7 +43,6 @@
     width: auto;
   }
 
-  /* HERO CONTENT - Full Screen Text */
   .front_content {
     flex-direction: column;
     width: 100vw;
@@ -58,12 +58,6 @@
     display: none !important;
   }
 
-  /* Keep third_img visible but adjust if needed, or hide if requested. 
-     User wanted "design responsive", implying visibility. 
-     The original code hid it. Let's make it visible but smaller or stack it.
-     Actually, original code had display: none !important. 
-     To make it responsive and visible as per "responsive design" request, we should show it.
-  */
   .third_img {
     display: flex !important;
     width: 280px;
@@ -147,7 +141,6 @@
     width: 50vw;
   }
 
-  /* Why Hire Me - Mobile Adjustments */
   .third_content {
     flex-direction: column;
     text-align: center;
@@ -158,7 +151,6 @@
 
   .third_text {
     text-align: center;
-    /* Center align on mobile */
     align-items: center;
   }
 
@@ -171,7 +163,6 @@
     text-align: center;
   }
 
-  /* ABOUT SECTION MOBILE */
   .about_heading {
     font-size: 2.5rem !important;
     margin-bottom: 30px;
@@ -199,7 +190,6 @@
     width: 100%;
   }
 
-  /* RESUME SECTION MOBILE */
   .resume_content_grid {
     flex-direction: column;
     gap: 30px;
@@ -224,10 +214,8 @@
     justify-content: center;
   }
 
-  /* CONTACT SECTION MOBILE */
   .contact_grid {
     grid-template-columns: 1fr;
-    /* Stack vertically */
     gap: 20px;
   }
 
@@ -236,18 +224,11 @@
     margin-bottom: 30px;
   }
 
-  /* PROJECT SECTION MOBILE */
   .project_grid {
     grid-template-columns: 1fr;
     gap: 30px;
   }
 
-  /* .media_wrapper {
-    height: 50vh !important;
-  } */
-
-  /* Ensure video/image fills the wrapper */
-  /* Ensure video/image fills the wrapper but keeps native height */
   .media_wrapper video,
   .media_wrapper img {
     height: auto !important;
@@ -256,10 +237,8 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* CONTACT SPLIT LAYOUT MOBILE */
   .contact_split_layout {
     flex-direction: column-reverse;
-    /* Image on top usually looks better, or bottom? Let's do standard column (Text first) */
     flex-direction: column;
     gap: 40px;
   }
@@ -270,26 +249,9 @@
 
   .contact_image_frame {
     height: 400px;
-    /* Smaller height for mobile */
     max-width: 100%;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @media screen and (min-width: 881px) {
 
@@ -297,7 +259,6 @@
     width: 75vw;
   }
 
-  /* NAV + SIDEBAR */
   .nav_position {
     top: 0;
     left: 0;
@@ -307,7 +268,6 @@
   }
 
   .footer_position {
-    position: absolute;
     top: 65px;
     left: 0;
     width: 25%;
@@ -364,7 +324,6 @@
     transform: translateY(calc(70px * 4));
   }
 
-  /* CONTENT SHIFT DUE TO SIDEBAR */
   .mcontainer,
   .rcontainer,
   .acontainer,
@@ -383,7 +342,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* padding-bottom: 50px; */
   }
 }
 
@@ -398,7 +356,6 @@
     height: 60px;
     flex-direction: row;
     border-width: 1px;
-    /* Full fill on mobile */
     border: none;
   }
 
@@ -413,6 +370,4 @@
   .send_box {
     width: 100%;
   }
-
-
 }

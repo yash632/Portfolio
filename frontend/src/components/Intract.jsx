@@ -62,8 +62,8 @@ const Intract = () => {
       <div className="loading">
         <img
           src="./img/yr_logo.webp"
-          alt="HennaBliss logo"
-          className="logo_henna"
+          alt="signature image"
+          className="logo_sign"
         />
       </div>
 
@@ -87,7 +87,7 @@ const Intract = () => {
         </div>
 
         <div className="footer_position" ref={footerNav}>
-          <footer>
+          <footer className="nav_footer">
             <nav>
               <ul>
                 <li className={`list ${location.pathname === "/home" ? "active" : ""}`}>

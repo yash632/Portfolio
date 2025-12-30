@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Received</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0F0F0F;
+            /* Ultra dark background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #E0E0E0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            background-image: url('https://res.cloudinary.com/dvbplh4z9/image/upload/v1676269931/portfolio_bg_placeholder.jpg');
+            /* Replace with a suitable tech/abstract image if you have one, using a generic one for now or a solid gradient if image fails */
+            background-size: cover;
+            background-position: center;
+            height: 150px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            /* Overlay */
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #D4AF37;
+            /* Gold/Metallic color */
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .message-box {
+            background-color: #242424;
+            border-left: 4px solid #D4AF37;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        /* Custom Details/Summary */
+        details {
+            background: #1f1f1f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #D4AF37;
+            list-style: none;
+            /* Hide default triangle */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 20px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        details[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        .details-content {
+            padding: 15px;
+            border-top: 1px solid #333;
+            color: #ccc;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            /* Preserve line breaks */
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #333;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .btn-block {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: transparent;
+            border: 1px solid #555;
+            color: #888;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-block:hover {
+            border-color: #ff4d4d;
+            color: #ff4d4d;
+            background-color: rgba(255, 77, 77, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>Connection Received</h1>
+            </div>
+        </div>
+        <div class="content">
+            <div class="greeting">Hello <strong>{{ name }}</strong>,</div>
+            <p>Thank you for reaching out! I have received your message and will get back to you as soon as possible.
+            </p>
+
+            <details>
+                <summary>View Your Message</summary>
+                <div class="details-content">
+                    {{ message_content }}
+                </div>
+            </details>
+
+            <p style="font-size: 14px; color: #aaa;">
+                If you did not send this message or wish to stop receiving emails from this portfolio, you can opt-out
+                below.
+            </p>
+
+            <div style="text-align: center;">
+                <a href="{{ block_url }}" class="btn-block">Not Interested / Block Future Emails</a>
+            </div>
+        </div>
+        <div class="footer">
+            &copy; 2025 Yash Rathore Portfolio. All rights reserved.<br>
+            <span style="font-size: 10px; opacity: 0.6;">Automated Response System</span>
+        </div>
+    </div>
+</body>
+
+</html>
