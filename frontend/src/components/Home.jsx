@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios"
 import Typed from "typed.js";
 import "../stylesheets/style.css";
 import TechSphere from "./TechSphere";
 import Portfolio from "./Portfolio";
+import { toast } from "sonner";
 
 const Home = () => {
   const el = useRef(null);
@@ -14,6 +16,11 @@ const Home = () => {
   const startX = useRef(0);
   const lastRotY = useRef(0);
   const animationRef = useRef(null);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [description, setDescription] = useState("");
+  const [words, setWords] = useState(0);
 
   useEffect(() => {
     // Typed.js initialization
@@ -74,6 +81,28 @@ const Home = () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, []);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.post("/messages", {
+      email,
+      name,
+      description
+    });
+    if (response.status === 200) {
+    setEmail("");
+    setName("");
+    setDescription("");
+    setWords(0);
+    }
+    toast.success(response.data.message);
+  }
+  catch (error) {
+    toast.error(error.response.data.message);
+  }
+  }
 
   // Drag Handlers
   const handleStart = (clientX) => {
@@ -213,7 +242,7 @@ const Home = () => {
               <span style={{ "--i": 6 }}>
                 <h6>UI/UX DESIGN</h6>
                 <img
-                  src="./services/ui.jpg"
+                  src="./services/ui.png"
                   alt="ui"
                   onError={(e) => {
                     e.target.src =
@@ -275,20 +304,28 @@ const Home = () => {
               <form
                 className="send_form"
                 id="requestForm"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={submitHandler}
               >
                 <div className="form_container">
                   <input
+                    className="hinput"
                     type="email"
                     placeholder="Enter your email"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                    title="Enter a valid email address"
                     id="femail"
                     required
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
                   />
                   <input
+                    className="hinput"
                     type="text"
                     placeholder="Enter your name"
                     id="fname"
                     required
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
                   />
                 </div>
 
@@ -296,10 +333,27 @@ const Home = () => {
                   placeholder="Describe your work"
                   id="fdesc"
                   required
+                  value={description}
+                  onChange={(e) => {
+                    let text = e.target.value;
+
+                    // multiple spaces ko single space banao
+                    text = text.replace(/\s+/g, " ");
+
+                    const words =
+                      text.trim() === "" ? [] : text.trim().split(" ");
+
+                    if (words.length <= 50) {
+                      setDescription(text);
+                      setWords(words.length);
+                    }
+                  }}
                 ></textarea>
-                <p id="wordCount" style={{ textAlign: "right", color: "#ccc" }}>
-                  Words: 0/50
+
+                <p style={{ textAlign: "right", color: "#ccc" }}>
+                  Words: {words}/50
                 </p>
+
                 <button
                   id="submitButton"
                   type="submit"
@@ -318,7 +372,7 @@ const Home = () => {
               </h6>
             </div>
 
-            <button className="send_btn" id="send_btn">
+            <button type="submit" className="send_btn" id="send_btn" form="requestForm">
               <div>S</div>
               <div>E</div>
               <div>N</div>

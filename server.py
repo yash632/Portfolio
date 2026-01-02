@@ -1,4 +1,5 @@
 import os
+import token
 from altair import Description
 from dotenv import load_dotenv
 from flask import Flask, request, render_template_string, session
@@ -15,7 +16,7 @@ import threading
 from itsdangerous import URLSafeTimedSerializer
 
 from datetime import datetime, timedelta
-
+import re
 # --- Load Config ---
 
 load_dotenv("config.env")
@@ -40,10 +41,12 @@ MAIL_USERNAME = os.getenv("MAIL_USERNAME")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
 MAIL_PORT = int(os.getenv("MAIL_PORT", 465))
-ADMIN_EMAIL = "yashveers138@gmail.com" # Hardcoded as per request, or use env
+ADMIN_EMAIL = "yashveers138@gmail.com"
 
 # Token Serializer
 serializer = URLSafeTimedSerializer(app.secret_key)
+
+EMAIL_REGEX = r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
 
 # --- Helper Functions ---
 def require_admin_login():
@@ -102,7 +105,7 @@ def is_rate_limited(ip):
         "created_at": {"$gte": window}
     })
 
-    return count >= 3
+    return count >= 1
 
 # --- Routes ---
 
@@ -116,10 +119,13 @@ def messages():
 
     email = data.get("email")
     name = data.get("name")
-    message_content = data.get("message")
+    message_content = data.get("description")
 
     if not email or not message_content:
-        return {"status": 400, "message": "Email and Message are required."}
+        return {"message": "Email and Message are required."}, 400
+    
+    if not re.match(EMAIL_REGEX, data["email"].lower()):
+        return {"message": "Invalid email format."}, 400
 
     # -----------------------------
     # RATE LIMIT (TOP PRIORITY)
@@ -129,10 +135,7 @@ def messages():
     ip = ip.split(",")[0].strip()
 
     if is_rate_limited(ip):
-        return {
-            "status": 429,
-            "message": "Too many messages sent. Please try again later."
-        }
+        return {"message": "Too many messages sent. Please try again later."}, 429
 
     # -----------------------------
     # 1. BLOCKED USER CHECK
@@ -142,10 +145,7 @@ def messages():
         "status": "blocked"
     })
     if blocked_user:
-        return {
-            "status": 403,
-            "message": "You have blocked emails from us. No message sent."
-        }
+        return {"message": "You have blocked emails from us. No message sent."}, 403
 
     # -----------------------------
     # 2. PENDING CHECK
@@ -155,10 +155,7 @@ def messages():
         "status": "pending"
     })
     if mpending:
-        return {
-            "status": 400,
-            "message": "You have a pending message. Please wait for a response."
-        }
+        return {"message": "You have a pending message. Please wait for a response."}, 400
 
     # -----------------------------
     # 3. RESPONDED → APPEND MESSAGE
@@ -192,7 +189,7 @@ def messages():
                 admin_html
             )
 
-        return {"status": 200, "message": "Message sent successfully!"}
+        return {"message": "Message sent successfully!"}, 200
 
     # -----------------------------
     # 4. NEW MESSAGE
@@ -210,13 +207,14 @@ def messages():
     # USER AUTO-REPLY
     # -----------------------------
     token = generate_block_token(email)
-    block_url = f"{request.host_url}block_user/{token}"
-
+    # block_url = f"{request.host_url}block_user/{token}"
+    block_url = f"https://ft65mrt2-5000.inc1.devtunnels.ms/block_user/{token}"
     user_html = get_template_content("user_auto_reply.html")
     if user_html:
         user_html = user_html.replace("{{ name }}", name)
-        user_html = user_html.replace("{{ message_content }}", message_content)
+        # user_html = user_html.replace("{{ message_content }}", message_content)
         user_html = user_html.replace("{{ block_url }}", block_url)
+        user_html = user_html.replace("{{ portfolio_url }}", request.host_url)
 
         send_async_email(
             email,
@@ -241,7 +239,7 @@ def messages():
             admin_html
         )
 
-    return {"status": 200, "message": "Message sent successfully!"}
+    return {"message": "Message sent successfully!"}, 200
 
 @app.route("/block_user/<token>", methods=["GET"])
 def block_user(token):
@@ -249,10 +247,6 @@ def block_user(token):
     if not email:
         return "Invalid or expired link. Please try sending a new message to get a fresh link.", 400
     
-    # Block the user in DB
-    # Update all existing messages from this email to 'blocked' (logic decision: or just mark user as blocked? User said "update user email to not interested")
-    # "us user ke email ko not intrested se update kr do db me" implies marking the records or a user record.
-    # Since we store messages, blocking all messages from this email is the way to flag "this email is blocked".
     mongo.db.message.update_many(
         {"email": email},
         {"$set": {"status": "blocked"}}
@@ -313,25 +307,31 @@ def admin_login():
     password = data.get("password")
 
     if not email or not password:
-        return {"status": 400, "message": "Email and password required"}
+        return {"message": "Email and password required"}, 400
 
     if email == os.getenv("ADMIN_EMAIL") and password == os.getenv("ADMIN_PASSWORD"):
         session["admin_logged_in"] = True
         session["admin_email"] = email
 
-        return {"status": 200, "message": "Login successful"}
+        return {"message": "Login successful"}, 200
 
-    return {"status": 401, "message": "Invalid credentials"}
+    return {"message": "Invalid credentials"}, 401
 
 @app.route("/admin/logout", methods=["POST"])
 def admin_logout():
     session.clear()
-    return {"status": 200, "message": "Logged out"}
+    return {"message": "Logged out Successfully"}, 200
+
+@app.route("/admin/check-auth")
+def admin_check_auth():
+    if require_admin_login():
+        return {"admin": True}
+    return {"admin": False}, 401
 
 @app.route("/admin/messages", methods=["GET"])
 def get_messages():
     if not require_admin_login():
-        return {"status": 403, "message": "unauthorized access"}
+        return {"message": "unauthorized access"}, 403      
 
     page = int(request.args.get("page", 1))
     limit = int(request.args.get("limit", 10))
@@ -365,17 +365,18 @@ def get_messages():
 @app.route("/admin/upload", methods=["POST"])
 def upload_media():
     if not require_admin_login():
-        return {"status": 403, "message": "unauthorized access"}
+        return {"message": "unauthorized access"}, 403
     
-    file = request.files["file"]
+    file = request.files.get("file")
+    # file = ""
     file_type = request.form.get("type", "image")
     title = request.form.get("title", "")
     description = request.form.get("description", "")
     raw_skills = request.form.get("skills", "")
     skills = [s.strip() for s in raw_skills.split(",") if s.strip()]
     
-    if not file:
-        return {"status": 400, "message": "No file uploaded."}
+    if not file or not file_type or not title or not description or not skills:
+        return {"message": "Enter The Complete Data."}, 400
 
     result = cloudinary.uploader.upload(file)
     
@@ -388,17 +389,22 @@ def upload_media():
         "id": result["public_id"]
     })
 
-    return {"status": 200, "message": "Media uploaded successfully!"}
+    return {"message": "Media uploaded successfully!"}, 200
 
 
 
 
-
-
-@app.before_first_request
 def setup_indexes():
-    mongo.db.message.create_index([("email", 1), ("status", 1)])
-    mongo.db.message.create_index([("ip", 1), ("created_at", -1)])
+    db = mongo.cx.get_database()   # ✅ SAFE WAY
+
+    db.message.create_index([("email", 1), ("status", 1)])
+    db.message.create_index([("ip", 1), ("created_at", -1)])
+
+    print("Indexes setup completed.")
+
 
 if __name__ == "__main__":
+    setup_indexes()
+
+    print("Flask server started at http://localhost:5000")
     app.run(host="0.0.0.0", port="5000", debug=True)

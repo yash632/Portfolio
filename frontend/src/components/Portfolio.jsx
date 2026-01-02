@@ -55,7 +55,7 @@ const Portfolio = () => {
                         <div className="card-image">
                             <img src={project.image} alt={project.title} />
                             <div className="card-overlay">
-                                <span>View Project</span>
+                                {/* <span>View Project</span> */}
                             </div>
                         </div>
                         <div className="card-content">
