@@ -21,6 +21,7 @@ const Home = () => {
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
   const [words, setWords] = useState(0);
+  const [load, setLoad] = useState(false);
 
   useEffect(() => {
     // Typed.js initialization
@@ -84,7 +85,7 @@ const Home = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    
+    setLoad(true);
     try {
       const response = await axios.post("/messages", {
       email,
@@ -97,10 +98,12 @@ const Home = () => {
     setDescription("");
     setWords(0);
     }
+    setLoad(false);
     toast.success(response.data.message);
   }
   catch (error) {
-    toast.error(error.response.data.message);
+    toast.error(error.response.data.message || "Something Went Wrong!");
+    setLoad(false);
   }
   }
 
@@ -358,6 +361,7 @@ const Home = () => {
                   id="submitButton"
                   type="submit"
                   style={{ display: "none" }}
+                  disabled={load}
                 >
                   Submit
                 </button>
@@ -372,7 +376,7 @@ const Home = () => {
               </h6>
             </div>
 
-            <button type="submit" className="send_btn" id="send_btn" form="requestForm">
+            <button type="submit" className="send_btn" id="send_btn" form="requestForm" disabled={load}>
               <div>S</div>
               <div>E</div>
               <div>N</div>

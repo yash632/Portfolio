@@ -305,7 +305,7 @@
   }
 
   nav ul li:nth-child(1).active~.indicator {
-    transform: translateY(calc(70px * 0));
+    transform: translateY(calc(62px * 0));
   }
 
   nav ul li:nth-child(2).active~.indicator {
@@ -345,6 +345,24 @@
   }
 }
 
+@media (max-width: 1035px) {
+  .footer_content {
+    flex-direction: column;
+    padding: 30px;
+  }
+  
+  .send_btn {
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    border-width: 1px;
+    border: none;
+  }
+
+  /* .send_btn div {
+    margin: 0 5px;
+  } */
+}
 @media (max-width: 900px) {
   .footer_content {
     flex-direction: column;

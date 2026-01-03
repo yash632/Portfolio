@@ -3,6 +3,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import '../../stylesheets/admin.css';
 import AdminMessages from './AdminMessages';
 import AdminUploads from './AdminUploads';
+import AdminMedia from './AdminMedia';
 import axios from "axios"
 import { toast } from "sonner"
 
@@ -40,7 +41,7 @@ const AdminDashboard = () => {
             }
         }
         catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.response.data.message || "Something Went Wrong!");
         }
     };
 
@@ -63,6 +64,12 @@ const AdminDashboard = () => {
                     >
                         Uploads
                     </li>
+                    <li
+                        className={activeTab === 'media' ? 'active' : ''}
+                        onClick={() => setActiveTab('media')}
+                    >
+                        Media
+                    </li>
                 </ul>
                 <div className="nav-footer">
                     <button onClick={handleLogout} className="logout-btn">Logout</button>
@@ -75,6 +82,7 @@ const AdminDashboard = () => {
                 </button>
                 {activeTab === 'messages' && <AdminMessages />}
                 {activeTab === 'uploads' && <AdminUploads />}
+                {activeTab === 'media' && <AdminMedia />}
             </main>
         </div>
     );

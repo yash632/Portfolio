@@ -1,8 +1,9 @@
 import os
 import token
 from altair import Description
+from bson import ObjectId
 from dotenv import load_dotenv
-from flask import Flask, request, render_template_string, session
+from flask import Flask, request, render_template_string, session, send_from_directory
 
 from flask_cors import CORS
 from flask_pymongo import PyMongo
@@ -27,7 +28,11 @@ cloudinary.config(
   api_secret=os.getenv("API_SECRET")
 )
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder="frontend/build/static",
+    template_folder="frontend/build"
+)
 CORS(app)
 
 app.secret_key = os.getenv("SECRET_KEY")  # already hai 👍
@@ -351,7 +356,8 @@ def get_messages():
             "email": m["email"],
             "message": m["message"],
             "status": m["status"],
-            "created_at": m.get("created_at")
+            "created_at": m.get("created_at"),
+            "ip": m.get("ip")
 
         })
 
@@ -391,11 +397,129 @@ def upload_media():
 
     return {"message": "Media uploaded successfully!"}, 200
 
+@app.route("/admin/respond", methods=["POST"])
+def respond_to_message():
+    if not require_admin_login():
+        return {"message": "unauthorized access"}, 403
+
+    data = request.json
+    message_id = data.get("_id")
+    response_text = data.get("status")
+
+    if not message_id or not response_text:
+        return {"message": "Message ID and Response required"}, 400
+
+    # Update the message with the response
+    result = mongo.db.message.update_one(
+        {"_id": ObjectId(message_id)},
+        {
+            "$set": {
+                "status": response_text            }
+        }
+    )
+
+    if result.modified_count == 0:
+        return {"message": "Message not found or already responded to"}, 404
+
+    return {"message": "Response sent successfully!"}, 200
+
+@app.route("/admin/block", methods=["POST"])
+def block_to_message():
+    if not require_admin_login():
+        return {"message": "unauthorized access"}, 403
+
+    data = request.json
+    message_id = data.get("_id")
+
+
+    if not message_id:
+        return {"message": "Message ID required"}, 400
+
+    result = mongo.db.message.update_one(
+        {"_id": ObjectId(message_id)},
+        {
+            "$set": {
+                "status": data.get("status")
+            }
+        }
+    )
+
+    if result.modified_count == 0:
+        return {"message": "Message not found or already responded to"}, 404
+
+    return {"message": "Status Updated successfully!"}, 200
+@app.route("/admin/delete_media", methods=["POST"])
+def delete_media():
+    if not require_admin_login():
+        return {"message": "unauthorized access"}, 403
+
+    data = request.json
+    media_id = data.get("_id")
+
+    if not media_id:
+        return {"message": "Media ID required"}, 400
+
+    media = mongo.db.media.find_one({"_id": ObjectId(media_id)})
+    if not media:
+        return {"message": "Media not found"}, 404
+
+    try:
+        cloudinary.uploader.destroy(media["id"])
+    except Exception as e:
+        print(f"Error deleting from Cloudinary: {e}")
+
+    mongo.db.media.delete_one({"_id": ObjectId(media_id)})
+
+
+    return {"message": "Media deleted successfully!"}, 200
+
+@app.route("/admin/edit_media", methods=["POST"])
+def edit_media():
+    if not require_admin_login():
+        return {"message": "unauthorized access"}, 403
+
+    data = request.json
+    media_id = data.get("_id")
+    
+    if not media_id:
+        return {"message": "Media ID required"}, 400
+
+    update_fields = {
+        "title": data.get("title"),
+        "description": data.get("description"),
+        "skills": data.get("skills")
+    }
+
+    result = mongo.db.media.update_one(
+        {"_id": ObjectId(media_id)},
+        {"$set": update_fields}
+    )
+
+    if result.matched_count == 0:
+         return {"message": "Media not found"}, 404
+
+    return {"message": "Media updated successfully!"}, 200
+
+
+
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_react(path):
+    full_path = os.path.join(app.template_folder, path)
+
+    # agar koi actual file hai (js, css, image)
+    if path != "" and os.path.exists(full_path):
+        return send_from_directory(app.template_folder, path)
+
+    # warna React ka index.html
+    return send_from_directory(app.template_folder, "index.html")
 
 
 
 def setup_indexes():
-    db = mongo.cx.get_database()   # ✅ SAFE WAY
+    db = mongo.cx.get_database()
 
     db.message.create_index([("email", 1), ("status", 1)])
     db.message.create_index([("ip", 1), ("created_at", -1)])

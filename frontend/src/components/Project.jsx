@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
+import { toast } from 'sonner';
 
-const projectsData = [
+const MOCK_PROJECTS = [
   {
     id: 1,
     title: "AstraEye: Vision for Blind",
@@ -29,15 +31,6 @@ const projectsData = [
     poster: "https://placehold.co/600x400/1a1a1a/00ffcc?text=VisionSafe"
   },
   {
-    id: 4,
-    title: "BeatBlaast",
-    description: "Seamless music streaming platform syncing playlists with MongoDB and fetching tracks dynamically.",
-    tech: ["Node.js", "Express", "MongoDB"],
-    type: "image",
-    src: "https://placehold.co/600x400/1a1a1a/1e90ff?text=BeatBlaast_UI",
-    poster: ""
-  },
-  {
     id: 5,
     title: "Project Astitva",
     description: "Virtual human clone with lip-sync animation. Uses SadTalker, Gemini, and Coqui TTS.",
@@ -45,25 +38,82 @@ const projectsData = [
     type: "video",
     src: "videos/astitva.mp4",
     poster: "https://placehold.co/600x400/1a1a1a/da70d6?text=Project_Astitva"
-  },
-  {
-    id: 6,
-    title: "Weather Dashboard",
-    description: "Live weather tracking functionality using OpenWeather API and Python.",
-    tech: ["Python", "API Integration"],
-    type: "image",
-    src: "https://placehold.co/600x400/1a1a1a/ffffff?text=Weather_App",
-    poster: ""
   }
 ];
 
 const Project = () => {
   const [filter, setFilter] = useState('all');
+  const [projects, setProjects] = useState(MOCK_PROJECTS);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const filteredProjects = projectsData.filter(project => {
-    if (filter === 'all') return true;
-    return project.type === filter;
-  });
+  // Ref to track if it's the initial mount to prevent double fetching if strict mode
+  const isInitialMount = React.useRef(true);
+
+  // Fetch Logic
+  const fetchProjects = async (pageNum, currentFilter) => {
+    setLoading(true);
+    try {
+      const mediaType = currentFilter === 'image' ? 'photo' : currentFilter; // map 'image' -> 'photo'
+      const response = await axios.get(`/fetch/media?page=${pageNum}&limit=10&type=${mediaType}`);
+
+      const fetchedData = response.data.data.map(item => ({
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        tech: Array.isArray(item.skills) ? item.skills : (item.skills ? item.skills.split(',') : []), // Handle skills format
+        type: item.file_type === 'photo' ? 'image' : 'video', // Map backend type to frontend
+        src: item.url,
+        poster: "" // Backend might not have poster, default empty
+      }));
+
+      setProjects(prev => {
+        // Merge logic: If page 1, reset to Mock + Fetched. Else append.
+        if (pageNum === 1) {
+          // Filter mock data locally
+          const filteredMock = MOCK_PROJECTS.filter(p => currentFilter === 'all' || p.type === currentFilter);
+          return [...filteredMock, ...fetchedData];
+        } else {
+          return [...prev, ...fetchedData];
+        }
+      });
+
+      setHasMore(fetchedData.length === 10); // Standard limit check
+      setLoading(false);
+
+    } catch (error) {
+      console.error("Failed to fetch projects", error);
+      toast.error("Failed to load more projects");
+      setLoading(false);
+    }
+  };
+
+  // Effect to fetch when filter changes
+  useEffect(() => {
+    setPage(1); // Reset page
+    setHasMore(true);
+    fetchProjects(1, filter);
+  }, [filter]);
+
+  const loadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchProjects(nextPage, filter);
+  };
+
+  // Lightbox Logic
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openLightbox = (src) => {
+    setSelectedImage(src);
+    document.body.style.overflow = 'hidden'; // Disable scroll
+  };
+
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'auto'; // Enable scroll
+  };
 
   return (
     <section id="project" className="section active">
@@ -95,7 +145,7 @@ const Project = () => {
           </div>
 
           <div className="project_grid">
-            {filteredProjects.map((project) => (
+            {projects.map((project) => (
               <div className="project_card glass_card" key={project.id}>
 
                 {project.type === 'video' ? (
@@ -106,7 +156,7 @@ const Project = () => {
                     </video>
                   </div>
                 ) : (
-                  <div className="media_wrapper image_wrapper">
+                  <div className="media_wrapper image_wrapper" onClick={() => openLightbox(project.src)} style={{ cursor: 'pointer' }}>
                     <img src={project.src} alt={project.title} />
                   </div>
                 )}
@@ -124,8 +174,32 @@ const Project = () => {
             ))}
           </div>
 
+          {/* Load More Button */}
+          {hasMore && (
+            <div className="load-more-container" style={{ textAlign: 'center', marginTop: '40px' }}>
+              <button
+                onClick={loadMore}
+                className="filter_btn" // Reuse filter btn style for consistency
+                disabled={loading}
+                style={{ padding: '12px 30px', fontSize: '1rem' }}
+              >
+                {loading ? "Loading..." : "Load More Projects"}
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
+
+      {/* Lightbox Overlay */}
+      {selectedImage && (
+        <div className="lightbox-overlay" onClick={closeLightbox}>
+          <div className="lightbox-content" onClick={e => e.stopPropagation()}>
+            <button className="lightbox-close" onClick={closeLightbox}>&times;</button>
+            <img src={selectedImage} alt="Enlarged Project" className="lightbox-image" />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

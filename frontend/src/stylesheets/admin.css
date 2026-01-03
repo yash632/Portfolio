@@ -600,6 +600,46 @@
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Blocked State Styling */
+.message-card.blocked {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: linear-gradient(180deg, rgba(30, 0, 0, 0.2) 0%, rgba(15, 0, 0, 0.3) 100%);
+  border-left-color: #ef4444;
+}
+
+.blocked-tag {
+  font-size: 0.75rem;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 10px;
+  font-weight: 700;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.status-toggle.blocked-active {
+  background: rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.status-toggle.block-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.status-toggle.block-btn:hover i {
+  color: #ef4444 !important;
+}
+
+.message-card.read {
+  border-left-color: var(--neon-cyan);
+}
+
+.message-card.pending {
+  border-left-color: #fbbf24;
+}
+
 .detail-item strong {
   display: block;
   color: #94a3b8;
@@ -977,4 +1017,10 @@
     padding: 20px;
     margin-bottom: 80px;
   }
+}
+
+.delete-btn-hover:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
 }

@@ -25,9 +25,9 @@ const Resume = () => {
                             </div>
 
                             <div className="resume_item">
-                                <div className="year">01/2024 - 03/2024</div>
-                                <h3 className="role">AI-ML Virtual Internship</h3>
-                                <p className="institution">AWS (EduSkill)</p>
+                                <div className="year">07/2024 - 08/2024</div>
+                                <h3 className="role">Python Data Science Course</h3>
+                                <p className="institution">Wipro (TalentNext)</p>
                             </div>
 
                             <div className="resume_item">
