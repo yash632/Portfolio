@@ -5,6 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@ffmpeg/core": "^0.12.4",
+    "@ffmpeg/ffmpeg": "^0.12.4",
+    "@ffmpeg/util": "^0.12.2",
     "@mui/material": "^7.3.4",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",

@@ -150,7 +150,7 @@ const Project = () => {
 
                 {project.type === 'video' ? (
                   <div className="media_wrapper video_wrapper">
-                    <video controls poster={project.poster}>
+                    <video controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} controls poster={project.poster}>
                       <source src={project.src} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>

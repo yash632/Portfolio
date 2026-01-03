@@ -6,3 +6,4 @@ cloudinary
 pymongo
 itsdangerous
 gunicorn
+pillow

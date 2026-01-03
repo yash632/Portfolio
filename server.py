@@ -7,6 +7,7 @@ from flask import Flask, request, render_template_string, session, send_from_dir
 
 from flask_cors import CORS
 from flask_pymongo import PyMongo
+from pymongo.errors import PyMongoError
 import cloudinary, cloudinary.uploader
 
 from email.mime.multipart import MIMEMultipart
@@ -18,6 +19,9 @@ from itsdangerous import URLSafeTimedSerializer
 
 from datetime import datetime, timedelta
 import re
+from PIL import Image
+import io
+
 # --- Load Config ---
 
 load_dotenv("config.env")
@@ -36,10 +40,21 @@ app = Flask(
 CORS(app)
 
 app.secret_key = os.getenv("SECRET_KEY")  # already hai 👍
-
-
+    
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-mongo = PyMongo(app)
+mongo = None
+
+def connect_db():
+    global mongo
+    try:
+        mongo = PyMongo(app)
+        print("✅ MongoDB connected")
+    except PyMongoError as e:
+        mongo = None
+        print("⚠️ MongoDB connection failed:", e)
+
+
+connect_db()
 
 # Email Configuration
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
@@ -53,7 +68,10 @@ serializer = URLSafeTimedSerializer(app.secret_key)
 
 EMAIL_REGEX = r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
 
-# --- Helper Functions ---
+#-------------------------------------------------------
+#----------- Helper Functions -----------------------
+#-------------------------------------------------------
+
 def require_admin_login():
     return session.get("admin_logged_in") is True
 
@@ -112,14 +130,48 @@ def is_rate_limited(ip):
 
     return count >= 1
 
-# --- Routes ---
+def check_db():
+    global mongo
+    if not mongo:
+        connect_db()
+        return {"message": "Can't connect to database, please refresh"}, 500
+    
+def optimize_image(file):
+    img = Image.open(file)
+    img.load()
 
-@app.route("/health")
-def health_check():
-    return {"status": 200, "message": "Flask server is running!"}
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+
+    # ✅ SAFE resolution (no blur)
+    MAX_SIDE = 2048   # 👈 ye key hai
+    w, h = img.size
+
+    if max(w, h) > MAX_SIDE:
+        scale = MAX_SIDE / max(w, h)
+        img = img.resize(
+            (int(w * scale), int(h * scale)),
+            Image.LANCZOS
+        )
+
+    buffer = io.BytesIO()
+    img.save(
+        buffer,
+        format="WEBP",
+        quality=82,     # 👈 sharp & safe
+        optimize=True
+    )
+
+    buffer.seek(0)
+    return buffer
+
+#-------------------------------------------------------
+#----------- Public Routes -----------------------
+#-------------------------------------------------------
 
 @app.route("/messages", methods=["POST"])
 def messages():
+    check_db()
     data = request.json
 
     email = data.get("email")
@@ -212,8 +264,8 @@ def messages():
     # USER AUTO-REPLY
     # -----------------------------
     token = generate_block_token(email)
-    # block_url = f"{request.host_url}block_user/{token}"
-    block_url = f"https://ft65mrt2-5000.inc1.devtunnels.ms/block_user/{token}"
+    block_url = f"{request.host_url}block_user/{token}"
+    # block_url = f"https://ft65mrt2-5000.inc1.devtunnels.ms/block_user/{token}"
     user_html = get_template_content("user_auto_reply.html")
     if user_html:
         user_html = user_html.replace("{{ name }}", name)
@@ -265,7 +317,7 @@ def block_user(token):
 
 @app.route("/fetch/media", methods=["GET"])
 def fetch_media():
-
+    check_db()
     page = int(request.args.get("page", 1))
     limit = int(request.args.get("limit", 10))
     media_type = request.args.get("type", "all")  # all | video | photo
@@ -302,7 +354,9 @@ def fetch_media():
         "data": media
     }
 
-#--- Admin Routes ---
+#-------------------------------------------------------
+#----------- Admin Routes -----------------------
+#-------------------------------------------------------
 
 @app.route("/admin/login", methods=["POST"])
 def admin_login():
@@ -335,6 +389,7 @@ def admin_check_auth():
 
 @app.route("/admin/messages", methods=["GET"])
 def get_messages():
+    check_db()
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403      
 
@@ -370,12 +425,13 @@ def get_messages():
 
 @app.route("/admin/upload", methods=["POST"])
 def upload_media():
+    check_db()
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403
     
     file = request.files.get("file")
     # file = ""
-    file_type = request.form.get("type", "image")
+    file_type = request.form.get("type", "photo")
     title = request.form.get("title", "")
     description = request.form.get("description", "")
     raw_skills = request.form.get("skills", "")
@@ -383,9 +439,18 @@ def upload_media():
     
     if not file or not file_type or not title or not description or not skills:
         return {"message": "Enter The Complete Data."}, 400
-
-    result = cloudinary.uploader.upload(file)
     
+    # Optimize image before upload
+    if file_type == "photo":
+        file = optimize_image(file)
+    elif file_type == "video":
+        result = cloudinary.uploader.upload(
+            file,
+            resource_type="video"
+    )
+
+    # result = cloudinary.uploader.upload(file)
+
     mongo.db.media.insert_one({
         "title": title,
         "file_type": file_type,
@@ -399,6 +464,7 @@ def upload_media():
 
 @app.route("/admin/respond", methods=["POST"])
 def respond_to_message():
+    check_db()
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403
 
@@ -425,6 +491,7 @@ def respond_to_message():
 
 @app.route("/admin/block", methods=["POST"])
 def block_to_message():
+    check_db()
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403
 
@@ -448,8 +515,10 @@ def block_to_message():
         return {"message": "Message not found or already responded to"}, 404
 
     return {"message": "Status Updated successfully!"}, 200
+
 @app.route("/admin/delete_media", methods=["POST"])
 def delete_media():
+    check_db()
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403
 
@@ -473,8 +542,28 @@ def delete_media():
 
     return {"message": "Media deleted successfully!"}, 200
 
+@app.route("/admin/delete_message", methods=["POST"])
+def delete_message():
+    check_db()
+    if not require_admin_login():
+        return {"message": "unauthorized access"}, 403
+
+    data = request.json
+    message_id = data.get("_id")
+
+    if not message_id:
+        return {"message": "Message ID required"}, 400
+
+    result = mongo.db.message.delete_one({"_id": ObjectId(message_id)})
+
+    if result.deleted_count == 0:
+        return {"message": "Message not found"}, 404
+
+    return {"message": "Message deleted successfully!"}, 200
+
 @app.route("/admin/edit_media", methods=["POST"])
 def edit_media():
+    check_db()
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403
 
@@ -500,9 +589,9 @@ def edit_media():
 
     return {"message": "Media updated successfully!"}, 200
 
-
-
-
+#-------------------------------------------------------
+#----------- React Serving Route -----------------------
+#-------------------------------------------------------
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -516,7 +605,9 @@ def serve_react(path):
     # warna React ka index.html
     return send_from_directory(app.template_folder, "index.html")
 
-
+#--------------------------------------------------------
+#----------- Setup Indexes ------------------------------
+#--------------------------------------------------------
 
 def setup_indexes():
     db = mongo.cx.get_database()

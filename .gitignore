@@ -4,11 +4,13 @@ __pycache__/
 /visuals_data
 **/tempCodeRunnerFile.py
 /.vscode/
-/desktop.ini
+desktop.ini
+
 # Environment Variables
 config.env
 .env
 .env.local
+/node_modules
 
 # Python
 __pycache__/
@@ -33,7 +35,6 @@ Thumbs.db
 *.swo
 
 # Build Outputs
-frontend/build/
 frontend/dist/
 frontend/coverage/
 

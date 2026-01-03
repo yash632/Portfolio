@@ -1,13 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../stylesheets/admin.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Admin = () => {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
+      const [isAdmin, setIsAdmin] = useState(null); // null = checking
+
+    useEffect(() => {
+        axios
+            .get("/admin/check-auth", { withCredentials: true })
+            .then((res) => {
+                setIsAdmin(res.data.admin);
+            })
+            .catch(() => {
+                setIsAdmin(false);
+            });
+    }, []);
+
+    if (isAdmin === null) {
+        return <div>Checking access...</div>;
+    } 
+
+    if (isAdmin) {
+        return <Navigate to="/admin/dashboard" replace />;
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

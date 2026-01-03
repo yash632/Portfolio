@@ -103,6 +103,20 @@ const AdminMessages = () => {
         }
     };
 
+    const deleteMessage = async (e, id) => {
+        e.stopPropagation();
+        if (!window.confirm("Are you sure you want to delete this message? This action cannot be undone.")) return;
+
+        try {
+            await axios.post('/admin/delete_message', { _id: id }, { withCredentials: true });
+
+            setMessages(prev => prev.filter(msg => msg._id !== id));
+            toast.success("Message deleted successfully");
+        } catch (error) {
+            toast.error("Failed to delete message");
+        }
+    };
+
     const formatDate = (dateInput) => {
         if (!dateInput) return 'N/A';
 
@@ -124,87 +138,98 @@ const AdminMessages = () => {
     };
 
     return (
-        <div className="admin-messages">
-            <h2>User Messages</h2>
-            <div className="messages-list">
+        <div className="admin-messages-container">
+            <h2 className="section-title">Message Center</h2>
+
+            <div className="messages-grid">
                 {messages.map((msg, index) => {
                     const isLastMessage = messages.length === index + 1;
+                    const isExpanded = expandedIds[msg._id];
+
                     return (
                         <div
                             ref={isLastMessage ? lastMessageRef : null}
                             key={msg._id}
-                            className={`message-card ${expandedIds[msg._id] ? 'expanded' : ''} ${msg.status}`}
+                            className={`premium-card ${msg.status} ${isExpanded ? 'active-card' : ''}`}
                             onClick={() => toggleExpand(msg._id)}
                         >
-                            <div className="message-header">
-                                <div className="header-left">
-                                    {/* Status Toggle (Pending/Responded) - Hide if blocked? Or disable? */}
+                            {/* Card Glow Effect */}
+                            <div className="card-glow"></div>
+
+                            {/* Header: User Info & Status */}
+                            <div className="card-header">
+                                <div className="user-info">
+                                    <div className="avatar-placeholder">
+                                        {msg.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div className="meta">
+                                        <span className="user-name">{msg.name}</span>
+                                        <span className="msg-time">{formatDate(msg.created_at)}</span>
+                                    </div>
+                                </div>
+                                <div className={`status-badge ${msg.status}`}>
+                                    {msg.status === 'blocked' && <i className="fi fi-sr-lock"></i>}
+                                    {msg.status === 'responded' && <i className="fi fi-sr-check-circle"></i>}
+                                    {msg.status === 'pending' && <i className="fi fi-sr-clock"></i>}
+                                    <span>{msg.status}</span>
+                                </div>
+                            </div>
+
+                            {/* Body: Message Content */}
+                            <div className="card-body">
+                                <p className={`message-text ${isExpanded ? 'full' : 'truncated'}`}>
+                                    {msg.message}
+                                </p>
+                                <div className="expand-hint">
+                                    {isExpanded ? 'Click to collapse' : 'Click to read more'}
+                                </div>
+                            </div>
+
+                            {/* Footer: User Details & Actions */}
+                            <div className="card-footer" onClick={(e) => e.stopPropagation()}>
+                                <div className="contact-mini">
+                                    <i className="fi fi-sr-envelope"></i>
+                                    <span>{msg.email}</span>
+                                </div>
+
+                                <div className="action-bar">
+                                    {/* STATUS TOGGLE */}
                                     {msg.status !== 'blocked' && (
-                                        <div className="status-wrapper">
-                                            <button
-                                                className={`status-toggle ${msg.status === 'responded' ? 'checked' : ''}`}
-                                                onClick={(e) => toggleStatus(e, msg._id, msg.status)}
-                                                title={msg.status === 'responded' ? "Mark as Pending" : "Mark as Responded"}
-                                            >
-                                                {msg.status === 'responded' ? (
-                                                    <i className="fi fi-sr-check"></i>
-                                                ) : (
-                                                    <div className="pending-dot"></div>
-                                                )}
-                                            </button>
-                                        </div>
+                                        <button
+                                            className="action-btn status-btn"
+                                            onClick={(e) => toggleStatus(e, msg._id, msg.status)}
+                                            title={msg.status === 'responded' ? "Mark Pending" : "Mark Responded"}
+                                        >
+                                            <i className={`fi ${msg.status === 'responded' ? 'fi-sr-undo' : 'fi-sr-check'}`}></i>
+                                        </button>
                                     )}
 
-                                    {/* Block/Unblock Toggle */}
-                                    <div className="status-wrapper" style={{ marginLeft: msg.status === 'blocked' ? 0 : '10px' }}>
-                                        <button
-                                            className={`status-toggle ${msg.status === 'blocked' ? 'blocked-active' : 'block-btn'}`}
-                                            onClick={(e) => toggleBlock(e, msg._id, msg.status)}
-                                            title={msg.status === 'blocked' ? "Unblock User" : "Block User"}
-                                            style={{ borderColor: msg.status === 'blocked' ? '#ef4444' : 'rgba(255,255,255,0.2)' }}
-                                        >
-                                            <i className={`fi ${msg.status === 'blocked' ? 'fi-sr-lock' : 'fi-sr-ban'}`} style={{ fontSize: '0.8rem', color: msg.status === 'blocked' ? '#ef4444' : '#94a3b8' }}></i>
-                                        </button>
-                                    </div>
+                                    {/* BLOCK BUTTON */}
+                                    <button
+                                        className={`action-btn block-btn ${msg.status === 'blocked' ? 'active' : ''}`}
+                                        onClick={(e) => toggleBlock(e, msg._id, msg.status)}
+                                        title={msg.status === 'blocked' ? "Unblock" : "Block"}
+                                    >
+                                        <i className="fi fi-sr-ban"></i>
+                                    </button>
 
-                                    <span className="msg-name" style={{ opacity: msg.status === 'blocked' ? 0.5 : 1 }}>{msg.name}</span>
-                                    {msg.status === 'blocked' && <span className="blocked-tag">BLOCKED</span>}
+                                    {/* DELETE BUTTON */}
+                                    <button
+                                        className="action-btn delete-btn"
+                                        onClick={(e) => deleteMessage(e, msg._id)}
+                                        title="Delete Permanently"
+                                    >
+                                        <i className="fi fi-sr-trash"></i>
+                                    </button>
                                 </div>
-                                <span className="msg-date">{formatDate(msg.created_at)}</span>
                             </div>
-
-                            <div className="message-preview">
-                                {expandedIds[msg._id] ? "" : <p className="preview-text">{msg.message.substring(0, 50)}{msg.message.length > 50 ? '...' : ''}</p>}
-                            </div>
-
-                            {expandedIds[msg._id] && (
-                                <div className="message-details">
-                                    <div className="detail-row full-message">
-                                        <strong>Message:</strong>
-                                        <p>{msg.message}</p>
-                                    </div>
-                                    <div className="detail-grid">
-                                        <div className="detail-item">
-                                            <strong>Email</strong> <span>{msg.email}</span>
-                                        </div>
-                                        <div className="detail-item">
-                                            <strong>IP</strong> <span>{msg.ip || 'N/A'}</span>
-                                        </div>
-                                        <div className="detail-item">
-                                            <strong>ID</strong> <span>{msg._id}</span>
-                                        </div>
-                                        <div className="detail-item">
-                                            <strong>Status</strong> <span style={{ textTransform: 'uppercase', color: msg.status === 'blocked' ? '#ef4444' : 'inherit' }}>{msg.status}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     );
                 })}
-                {loading && <div className="loading-spinner" style={{ textAlign: 'center', padding: '20px', color: '#fff' }}>Loading...</div>}
-                {!hasMore && messages.length > 0 && <div className="end-message" style={{ textAlign: 'center', padding: '20px', color: '#94a3b8' }}>No more messages</div>}
             </div>
+
+            {loading && <div className="loading-bar">Fetching Messages...</div>}
+            {!hasMore && messages.length > 0 && <div className="end-of-list">You're all caught up!</div>}
         </div>
     );
 };

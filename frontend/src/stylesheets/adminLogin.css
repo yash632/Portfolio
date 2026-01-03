@@ -1,0 +1,196 @@
+.admin-login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #23242a;
+    /* Fallback */
+    background-color: var(--bg-color);
+    font-family: "Gilroy-Medium", sans-serif;
+    overflow: hidden;
+    /* Prevent scrollbars from animations */
+}
+
+/* Scoping everything inside .admin-login-body */
+.admin-login-body * {
+    box-sizing: border-box;
+}
+
+.admin-login-body .box {
+    position: relative;
+    width: 380px;
+    height: 500px;
+    background-color: var(--bg-color);
+    /* Matches theme background */
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.admin-login-body .box::before,
+.admin-login-body .box::after,
+.admin-login-body .border::before,
+.admin-login-body .border::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 380px;
+    height: 500px;
+    z-index: 1;
+    /* Updated gradient to match theme (Cyan to Purple/Pink) */
+    background: linear-gradient(90deg, transparent, var(--accent-color), #a855f7, var(--accent-color));
+    transform-origin: bottom right;
+    animation: adminAnimate 6s linear infinite;
+}
+
+.admin-login-body .border {
+    position: absolute;
+    top: 0;
+    inset: 0;
+}
+
+.admin-login-body .border::before,
+.admin-login-body .border::after {
+    /* Updated border gradient */
+    background: linear-gradient(90deg, transparent, var(--accent-color), #a855f7) !important;
+}
+
+.admin-login-body .border::before {
+    animation-delay: -1.5s;
+}
+
+.admin-login-body .border::after {
+    animation-delay: -4.5s;
+}
+
+.admin-login-body .box::after {
+    animation-delay: -3s;
+}
+
+@keyframes adminAnimate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.admin-login-body .box form {
+    position: absolute;
+    inset: 4px;
+    background-color: #23242a;
+    /* Slightly lighter than pure black for depth, or use --secondary-color */
+    background-color: #0f172a;
+    /* Dark slate matching theme usually */
+    padding: 50px 40px;
+    border-radius: 8px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-login-body .box form h2 {
+    color: var(--text-main);
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.1em;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.admin-login-body .box form .inputBox {
+    position: relative;
+    width: 100%;
+    margin-top: 35px;
+}
+
+.admin-login-body .box form .inputBox input {
+    position: relative;
+    width: 100%;
+    padding: 20px 10px 10px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+    z-index: 10;
+}
+
+.admin-login-body .box form .inputBox span {
+    position: absolute;
+    left: 0;
+    padding: 20px 0px 10px;
+    font-size: 1em;
+    color: var(--text-muted);
+    /* #8f8f8f equivalent */
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    transition: 0.5s;
+}
+
+.admin-login-body .box form .inputBox input:valid~span,
+.admin-login-body .box form .inputBox input:focus~span {
+    color: var(--accent-color);
+    /* Cyan highlight */
+    font-size: 0.75em;
+    transform: translateY(-34px);
+}
+
+.admin-login-body .box form .inputBox i {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-main);
+    border-radius: 4px;
+    transition: 0.5s;
+    pointer-events: none;
+    z-index: 9;
+}
+
+.admin-login-body .box form .inputBox input:valid~i,
+.admin-login-body .box form .inputBox input:focus~i {
+    height: 44px;
+    background-color: var(--accent-color);
+    /* Highlight bar color */
+    box-shadow: 0 0 10px var(--accent-color);
+    /* Neon glow */
+}
+
+.admin-login-body .box form input[type="submit"] {
+    border: none;
+    outline: none;
+    padding: 9px 25px;
+    background-color: var(--accent-color);
+    cursor: pointer;
+    font-size: 0.9em;
+    border-radius: 4px;
+    font-weight: 600;
+    width: 100px;
+    margin-top: 20px;
+    color: #000;
+    /* Contrast text */
+    align-self: flex-start;
+    /* Or center if preferred */
+    transition: all 0.3s ease;
+}
+
+.admin-login-body .box form input[type="submit"]:hover {
+    background-color: #a855f7;
+    /* Purple on hover */
+    box-shadow: 0 0 15px #a855f7;
+    color: white;
+}
+
+.admin-login-body .box form input[type="submit"]:active {
+    opacity: 0.8;
+}
