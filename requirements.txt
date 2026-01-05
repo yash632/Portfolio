@@ -1,9 +1,10 @@
 Flask
 flask-cors
 flask-pymongo
+pymongo
 python-dotenv
 cloudinary
-pymongo
 itsdangerous
+altair
+Pillow
 gunicorn
-pillow
