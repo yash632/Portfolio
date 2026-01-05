@@ -57,10 +57,10 @@ def connect_db():
 connect_db()
 
 # Email Configuration
-MAIL_USERNAME = os.getenv("MAIL_USERNAME")
-MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
-MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
-MAIL_PORT = int(os.getenv("MAIL_PORT", 465))
+MAIL_USERNAME = os.getenv("MAIL_USER")
+MAIL_PASSWORD = os.getenv("MAIL_PASS")
+MAIL_SERVER = os.getenv("MAIL_HOST", "smtp.gmail.com")
+MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
 ADMIN_EMAIL = "yashveers138@gmail.com"
 
 # Token Serializer
@@ -81,12 +81,15 @@ def send_async_email(to_email, subject, html_content):
         try:
             msg = MIMEMultipart("alternative")
             msg["Subject"] = subject
-            msg["From"] = MAIL_USERNAME
+            msg["From"] = "Yash Rathore <forge.yash@gmail.com>"
             msg["To"] = to_email
             msg.attach(MIMEText(html_content, "html"))
 
             context = ssl.create_default_context()
-            with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, context=context) as server:
+            
+            # Use standard SMTP with starttls for Brevo (usually port 587)
+            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
+                server.starttls(context=context)
                 server.login(MAIL_USERNAME, MAIL_PASSWORD)
                 server.sendmail(MAIL_USERNAME, to_email, msg.as_string())
             print(f"Email sent to {to_email}")
