@@ -59,28 +59,48 @@ const AdminMedia = () => {
     const handleSave = async (id) => {
         const data = editData[id];
         try {
-            await axios.post("/admin/edit_media", {
-                _id: id,
-                title: data.title,
-                description: data.description,
-                skills: data.skills
-            }, { withCredentials: true });
+            // Use FormData for file support
+            const formData = new FormData();
+            formData.append("_id", id);
+            formData.append("title", data.title);
+            formData.append("description", data.description);
+            formData.append("skills", data.skills); // Sends as string, backend handles it
+
+            if (data.poster) {
+                formData.append("poster", data.poster);
+            }
+
+            const res = await axios.post("/admin/edit_media", formData, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" }
+            });
 
             toast.success("Media updated successfully");
 
             // Update local state
-            setMedia(prev => prev.map(item => item.id === id ? { ...item, ...data } : item));
+            setMedia(prev => prev.map(item => {
+                if (item.id === id) {
+                    const updatedItem = { ...item, ...data };
+                    // If backend returned new poster url, update it
+                    if (res.data.poster_url) {
+                        updatedItem.poster_url = res.data.poster_url;
+                    }
+                    return updatedItem;
+                }
+                return item;
+            }));
 
             // Exit edit mode
             setEditMode(prev => ({ ...prev, [id]: false }));
         } catch (error) {
+            console.error(error);
             toast.error("Failed to update media");
         }
     };
 
     return (
         <div className="admin-media customFont">
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '40px', color: '#fff' }}>Media Management</h2>
+            <h2 style={{ marginBottom: '40px', color: '#fff' }}>Media Management</h2>
             <div className="project_grid">
                 {media.length === 0 && !loading && <p style={{ color: '#94a3b8' }}>No media found.</p>}
 
@@ -89,7 +109,7 @@ const AdminMedia = () => {
 
                         {item.file_type === 'video' ? (
                             <div className="media_wrapper video_wrapper">
-                                <video src={item.url} muted />
+                                <video src={item.url} poster={item.poster_url} muted controls />
                             </div>
                         ) : (
                             <div className="media_wrapper image_wrapper">
@@ -108,6 +128,19 @@ const AdminMedia = () => {
                                         onChange={(e) => handleEditChange(item.id, 'title', e.target.value)}
                                         style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '8px', color: '#fff', borderRadius: '5px', width: '100%' }}
                                     />
+
+                                    {/* 🆕 POSTER UPLOAD IN EDIT */}
+                                    {item.file_type === 'video' && (
+                                        <div style={{ border: '1px dashed rgba(255,255,255,0.2)', padding: '10px', borderRadius: '5px' }}>
+                                            <label style={{ display: 'block', color: '#94a3b8', fontSize: '0.8rem', marginBottom: '5px' }}>Update Poster</label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleEditChange(item.id, 'poster', e.target.files[0])}
+                                                style={{ color: '#fff', fontSize: '0.8rem' }}
+                                            />
+                                        </div>
+                                    )}
                                     <textarea
                                         value={editData[item.id]?.description || ''}
                                         onChange={(e) => handleEditChange(item.id, 'description', e.target.value)}
@@ -128,17 +161,34 @@ const AdminMedia = () => {
                                 // View Mode UI
                                 <>
                                     <h3>{item.title}</h3>
-                                    <p>{item.description ? item.description.substring(0, 80) + (item.description.length > 80 ? '...' : '') : 'No description'}</p>
+                                    <pre>{item.description ? item.description.substring(0, 80) + (item.description.length > 80 ? '...' : '') : 'No description'}</pre>
 
                                     <div className="tech_tags">
                                         {/* Parse skills string or array */}
-                                        {Array.isArray(item.skills)
-                                            ? item.skills.map((skill, i) => <span key={i}>{skill}</span>)
-                                            : (item.skills ? item.skills.split(',').map((skill, i) => <span key={i}>{skill.trim()}</span>) : null)
-                                        }
+                                        {(() => {
+                                            let s = item.skills;
+                                            let skillsList = [];
+                                            if (Array.isArray(s)) {
+                                                // Clean existing array elements
+                                                skillsList = s.map(str => typeof str === 'string' ? str.replace(/[\[\]"']/g, '').trim() : str);
+                                            } else if (s) {
+                                                // Check for legacy JSON
+                                                if (s.trim().startsWith('[') && s.trim().endsWith(']')) {
+                                                    try {
+                                                        const parsed = JSON.parse(s);
+                                                        if (Array.isArray(parsed)) skillsList = parsed;
+                                                    } catch { }
+                                                }
+                                                // Fallback split
+                                                if (skillsList.length === 0) {
+                                                    skillsList = s.split(',').map(str => str.replace(/[\[\]"']/g, '').trim()).filter(Boolean);
+                                                }
+                                            }
+                                            return skillsList.map((skill, i) => <span key={i}>{skill}</span>);
+                                        })()}
                                     </div>
 
-                                    <div style={{ position: 'absolute', bottom: '20px', right: '20px', display: 'flex', gap: '10px' }}>
+                                    <div style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                                         <button
                                             onClick={() => toggleEdit(item)}
                                             className="delete-btn-hover"

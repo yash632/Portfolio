@@ -8,28 +8,40 @@ import Contact from './components/Contact';
 import Project from './components/Project';
 import Admin from './components/Admin';
 import AdminDashboard from './components/Admin/AdminDashboard';
+/* Admin Sub-Components */
+import AdminMessages from './components/Admin/AdminMessages';
+import AdminUploads from './components/Admin/AdminUploads';
+import AdminMedia from './components/Admin/AdminMedia';
 import { Toaster } from "sonner";
 
 const App = () => {
   return (
     <>
-  <Toaster position="top-right" richColors />
-    <Routes>
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/" element={<Intract />}>
-        {/* Default route redirects to /home or renders Home directly. 
+      <Toaster position="top-right" richColors />
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+
+        {/* Nested Admin Dashboard Routes */}
+        <Route path="/admin/dashboard" element={<AdminDashboard />}>
+          <Route index element={<Navigate to="messages" replace />} />
+          <Route path="messages" element={<AdminMessages />} />
+          <Route path="uploads" element={<AdminUploads />} />
+          <Route path="media" element={<AdminMedia />} />
+        </Route>
+
+        <Route path="/" element={<Intract />}>
+          {/* Default route redirects to /home or renders Home directly. 
             Based on Intract links, /home is used. */}
-        <Route index element={<Navigate to="/home" replace />} />
-        <Route path="home" element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="resume" element={<Resume />} />
-        <Route path="project" element={<Project />} />
-        <Route path="contact" element={<Contact />} />
-        {/* Catch all to redirect to home */}
-        <Route path="*" element={<Navigate to="/home" replace />} />
-      </Route>
-    </Routes>
+          <Route index element={<Navigate to="/home" replace />} />
+          <Route path="home" element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="resume" element={<Resume />} />
+          <Route path="project" element={<Project />} />
+          <Route path="contact" element={<Contact />} />
+          {/* Catch all to redirect to home */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Route>
+      </Routes>
 
     </>
   );

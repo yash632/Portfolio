@@ -1,8 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../stylesheets/style.css";
 import "../stylesheets/respo.css";
 import Hero3D from "./Hero3D";
+
+// Import Page Components for Keep-Alive
+import Home from "./Home";
+import About from "./About";
+import Resume from "./Resume";
+import Project from "./Project";
+import Contact from "./Contact";
 
 const Intract = () => {
   const location = useLocation();
@@ -57,12 +64,18 @@ const Intract = () => {
     };
   }, []);
 
+  // Helper to check if a route is active (simple includes check or exact match)
+  const isRoute = (route) => {
+    if (route === '/home') return location.pathname === '/home' || location.pathname === '/';
+    return location.pathname === route;
+  };
+
   return (
     <>
       <div className="loading">
         <img
           src="./img/yr_logo.webp"
-          alt="signature image"
+          alt="signature_image"
           className="logo_sign"
         />
       </div>
@@ -77,20 +90,33 @@ const Intract = () => {
                   <span className="logo-signature">Yash Rathore</span>
                 </div>
               </Link>
-              {/* <Link to="/create_post" className="create_post">
-                <img src="./img/add.svg" alt="create" />
-              </Link> */}
             </div>
           </div>
 
-          <Outlet />
+          {/* KEEP ALIVE IMPLEMENTATION: Render all, hide inactive */}
+          <div style={{ display: isRoute('/home') ? 'block' : 'none' }}>
+            <Home />
+          </div>
+          <div style={{ display: isRoute('/about') ? 'block' : 'none' }}>
+            <About />
+          </div>
+          <div style={{ display: isRoute('/project') ? 'block' : 'none' }}>
+            <Project />
+          </div>
+          <div style={{ display: isRoute('/resume') ? 'block' : 'none' }}>
+            <Resume />
+          </div>
+          <div style={{ display: isRoute('/contact') ? 'block' : 'none' }}>
+            <Contact />
+          </div>
+
         </div>
 
         <div className="footer_position" ref={footerNav}>
           <footer className="nav_footer">
             <nav>
               <ul>
-                <li className={`list ${location.pathname === "/home" ? "active" : ""}`}>
+                <li className={`list ${isRoute("/home") ? "active" : ""}`}>
                   <Link to="/home" className="a">
                     <span className="icon">
                       <ion-icon name="home-outline"></ion-icon>
@@ -99,7 +125,7 @@ const Intract = () => {
                   </Link>
                 </li>
 
-                <li className={`list ${location.pathname === "/about" ? "active" : ""}`}>
+                <li className={`list ${isRoute("/about") ? "active" : ""}`}>
                   <Link to="/about" className="a">
                     <span className="icon">
                       <ion-icon name="information-circle-outline"></ion-icon>
@@ -108,16 +134,7 @@ const Intract = () => {
                   </Link>
                 </li>
 
-                <li className={`list ${location.pathname === "/resume" ? "active" : ""}`}>
-                  <Link to="/resume" className="a">
-                    <span className="icon">
-                      <ion-icon name="document-text-outline"></ion-icon>
-                    </span>
-                    <span className="text">Resume</span>
-                  </Link>
-                </li>
-
-                <li className={`list ${location.pathname === "/project" ? "active" : ""}`}>
+                <li className={`list ${isRoute("/project") ? "active" : ""}`}>
                   <Link to="/project" className="a">
                     <span className="icon">
                       <ion-icon name="code-outline"></ion-icon>
@@ -126,7 +143,16 @@ const Intract = () => {
                   </Link>
                 </li>
 
-                <li className={`list ${location.pathname === "/contact" ? "active" : ""}`}>
+                <li className={`list ${isRoute("/resume") ? "active" : ""}`}>
+                  <Link to="/resume" className="a">
+                    <span className="icon">
+                      <ion-icon name="document-text-outline"></ion-icon>
+                    </span>
+                    <span className="text">Resume</span>
+                  </Link>
+                </li>
+
+                <li className={`list ${isRoute("/contact") ? "active" : ""}`}>
                   <Link to="/contact" className="a">
                     <span className="icon">
                       <ion-icon name="call-outline"></ion-icon>

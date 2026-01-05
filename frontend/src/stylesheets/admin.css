@@ -309,7 +309,14 @@
 }
 
 /* Fix Nav Links Alignment */
+/* Fix Nav Links Alignment */
 .nav-links li {
+  width: 100%;
+  list-style: none;
+}
+
+.nav-links a {
+  display: block;
   width: 100%;
   padding: 16px 25px;
   border-radius: 12px;
@@ -318,14 +325,13 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: #94a3b8;
-  /* border: 1px solid transparent; */
-  display: block;
+  text-decoration: none;
+  /* Remove underline */
   text-align: left;
   position: relative;
-  /* overflow: hidden; */
 }
 
-.nav-links li:hover {
+.nav-links a:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.03);
   padding-left: 35px;
@@ -333,7 +339,7 @@
 }
 
 /* Active State - Premium Glow */
-.nav-links li.active {
+.nav-links a.active {
   background: linear-gradient(90deg, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
   border-left: 4px solid var(--neon-cyan);
   border-right: none;
@@ -342,11 +348,9 @@
   text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
 }
 
-.nav-links li.active::after {
+.nav-links a.active::after {
   content: '';
   position: absolute;
-  /* left: 0;
-  top: 0; */
   bottom: 0;
   width: 2px;
   background: var(--neon-cyan);
@@ -1021,16 +1025,17 @@
     display: flex;
     /* Show on mobile */
   }
+
   .nav-links li:hover {
     padding-left: 0;
-    
-}
+
+  }
 
   .admin-nav {
     width: 100%;
     /* ... */
     height: auto;
-    bottom: 0;
+    bottom: -10px;
     top: auto;
     flex-direction: row;
     justify-content: space-around;
@@ -1042,6 +1047,10 @@
     border-top: 1px solid var(--glass-border);
   }
 
+.nav-links a:hover {
+  padding-left: 0;
+  /* Subtle slide interaction */
+}
   .nav-header,
   .logout-btn {
     display: none;
@@ -1055,7 +1064,7 @@
   }
 
   .nav-links li {
-    padding: 10px;
+    padding: 0;
     text-align: center;
     flex: 1;
     margin: 0;
@@ -1063,18 +1072,31 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 0.9rem;
   }
 
-  .nav-links li.active {
+  .nav-links a {
+    font-size: 0.9rem;
+    padding: 10px;
+    display: flex;
+    /* Ensure center alignment */
+    justify-content: center;
+    align-items: center;
+    border-radius: 0;
+    /* Reset radius */
+  }
+
+  .nav-links a.active {
     background: transparent;
     border: none;
     border-bottom: 3px solid var(--neon-cyan);
     color: var(--neon-cyan);
     border-radius: 0;
+    box-shadow: none;
+    /* Remove desktop shadow */
+    text-shadow: none;
   }
 
-  .nav-links li.active::after {
+  .nav-links a.active::after {
     display: none;
   }
 

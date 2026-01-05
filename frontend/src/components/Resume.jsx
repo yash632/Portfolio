@@ -8,41 +8,65 @@ const Resume = () => {
 
                 <div className="resume_content_grid">
 
-                    {/* Internships & Certificates Column - Centered */}
-                    <div className="resume_column centered_column">
-                        <h2 className="column_title">Internships & Certificates</h2>
-                        <div className="resume_card glass_card">
+                    <div className="resume_content_grid" style={{ display: 'block' }}>
 
-                            <div className="resume_item">
-                                <h3 className="role">NPTEL Python for Data Science</h3>
-                                <p className="institution">Elite+Silver (75%)</p>
+                        {/* Internships Row */}
+                        <div className="resume_row_vertical">
+                            <div className="vertical_header">
+                                <h2 className="vertical_text">INTERNSHIPS</h2>
                             </div>
-                            
-                            <div className="resume_item">
-                                <div className="year">06/2024 - 08/2024</div>
-                                <h3 className="role">Python with Data Science & Image Processing</h3>
-                                <p className="institution">Internship</p>
+                            <div className="resume_content_right">
+                                <div className="resume_card glass_card">
+                                    <div className="resume_item">
+                                        <div className="year">06/2024 - 08/2024</div>
+                                        <h3 className="role">Python with Data Science & Image Processing</h3>
+                                        <p className="institution">Internship</p>
+                                    </div>
+                                    <div className="resume_item">
+                                        <div className="year">09/2023 - 11/2023</div>
+                                        <h3 className="role">AI–ML Virtual Internship</h3>
+                                        <p className="institution">Google</p>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div className="resume_item">
-                                <div className="year">07/2024 - 08/2024</div>
-                                <h3 className="role">Python Data Science Course</h3>
-                                <p className="institution">Wipro (TalentNext)</p>
-                            </div>
-
-                            <div className="resume_item">
-                                <div className="year">09/2023 - 11/2023</div>
-                                <h3 className="role">AI-ML Virtual Internship</h3>
-                                <p className="institution">Google</p>
-                            </div>
-
-                            <div className="resume_item">
-                                <div className="year">12/2023 - 02/2024</div>
-                                <h3 className="role">Programming Essentials in Python</h3>
-                                <p className="institution">CISCO</p>
-                            </div>
-
                         </div>
+
+                        {/* Training Row */}
+                        <div className="resume_row_vertical">
+                            <div className="vertical_header">
+                                <h2 className="vertical_text">TRAINING</h2>
+                            </div>
+                            <div className="resume_content_right">
+                                <div className="resume_card glass_card">
+                                    <div className="resume_item">
+                                        <div className="year">07/2025 - 08/2025</div>
+                                        <h3 className="role">Digital Skills Readiness Program – Data Science</h3>
+                                        <p className="institution">Wipro TalentNext</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Certifications Row */}
+                        <div className="resume_row_vertical">
+                            <div className="vertical_header">
+                                <h2 className="vertical_text">CERTIFICATIONS</h2>
+                            </div>
+                            <div className="resume_content_right">
+                                <div className="resume_card glass_card">
+                                    <div className="resume_item">
+                                        <h3 className="role">NPTEL: Python for Data Science</h3>
+                                        <p className="institution">Elite + Silver (75%)</p>
+                                    </div>
+                                    <div className="resume_item">
+                                        <div className="year">12/2023 - 02/2024</div>
+                                        <h3 className="role">Cisco: Programming Essentials in Python</h3>
+                                        <p className="institution">Cisco</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>

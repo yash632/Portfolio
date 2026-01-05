@@ -13,6 +13,8 @@ const AdminUploads = () => {
   const [fileType, setFileType] = useState("photo");
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [posterFile, setPosterFile] = useState(null); // 🆕 Poster State
+  const [posterPreview, setPosterPreview] = useState(null); // 🆕 Poster Preview
   const [load, setLoad] = useState(false);
   const [fileSize, setFileSize] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -43,61 +45,187 @@ const AdminUploads = () => {
     }
   };
 
+  const handlePosterChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setPosterFile(selectedFile);
+      setPosterPreview(URL.createObjectURL(selectedFile));
+    }
+  };
+
+  const handleRemovePoster = (e) => {
+    e.preventDefault();
+    setPosterFile(null);
+    setPosterPreview(null);
+  };
+
   const handleRemoveFile = (e) => {
     e.preventDefault();
     setFile(null);
     setPreview(null);
     setFileSize(null);
+    // Also clear poster on full clear? Maybe optional.
+  };
+
+  // ☁️ HELPER: Upload to Cloudinary Directly
+  const uploadToCloudinary = async (file, resourceType, onProgress) => {
+    // 1. Get Signature from Backend
+    const sigRes = await axios.post("/admin/generate-signature",
+      { folder: "" }, // Optional folder
+      { withCredentials: true }
+    );
+    const { signature, api_key, cloud_name, timestamp } = sigRes.data;
+
+    // 2. Prepare Form Data
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", api_key);
+    formData.append("timestamp", timestamp);
+    formData.append("signature", signature);
+
+    // 3. Upload to Cloudinary
+    const url = `https://api.cloudinary.com/v1_1/${cloud_name}/${resourceType}/upload`;
+
+    const response = await axios.post(url, formData, {
+      onUploadProgress: (progressEvent) => {
+        if (onProgress) onProgress(progressEvent);
+      }
+    });
+
+    return response.data; // contains secure_url, public_id
   };
 
   const doUpload = async (uploadFile) => {
+    // 🛑 VALIDATION: Check required metadata first
+    if (!title.trim() || !description.trim() || !skills.trim()) {
+      toast.error("Please fill in Title, Description, and Skills!");
+      return;
+    }
+
+    setLoad(true); // 🟢 FORCE UI VISIBILITY
+    const startTime = Date.now();
+
+    // ----------------------------------------------------------------
+    // 🎥 VIDEO: DIRECT UPLOAD STRATEGY
+    // ----------------------------------------------------------------
+    if (fileType === "video") {
+      try {
+        // A. Upload Main Video
+        // Reset Time for accurate speed calc (ignoring signature fetch time)
+        const uploadStart = Date.now();
+
+        const videoData = await uploadToCloudinary(uploadFile, "video", (progressEvent) => {
+          const loaded = progressEvent.loaded;
+          const total = progressEvent.total || uploadFile.size;
+
+          const percent = Math.round((loaded * 100) / total);
+          setUploadProgress(percent);
+
+          // Debugging
+          // console.log(`Video Progress: ${percent}%, Loaded: ${loaded}, Total: ${total}`);
+
+          const timeElapsed = (Date.now() - uploadStart) / 1000;
+
+          if (timeElapsed > 0.5 && loaded > 0) {
+            const speed = loaded / timeElapsed;
+            const remaining = total - loaded;
+            const seconds = remaining / speed;
+
+            if (isFinite(seconds)) {
+              const etaStr = seconds < 60
+                ? `${Math.round(seconds)}s`
+                : `${Math.round(seconds / 60)}m`;
+
+              setUploadEta(etaStr);
+            }
+          }
+        });
+
+        // B. Upload Poster (If exists)
+        let posterUrl = "";
+        let posterId = "";
+
+        if (posterFile) {
+          const posterData = await uploadToCloudinary(posterFile, "image", null);
+          posterUrl = posterData.secure_url;
+          posterId = posterData.public_id;
+        }
+
+        // C. Save Metadata to Backend
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("skills", skills);
+        formData.append("type", "video");
+        formData.append("url", videoData.secure_url);
+        formData.append("id", videoData.public_id);
+        formData.append("poster_url", posterUrl);
+        formData.append("poster_id", posterId);
+
+        const serverRes = await axios.post("/admin/upload", formData, {
+          withCredentials: true
+        });
+
+        toast.success(serverRes.data.message);
+        resetForm();
+
+      } catch (err) {
+        console.error(err);
+        toast.error("Direct Upload Failed");
+        setLoad(false);
+        setUploadProgress(0);
+      }
+      return;
+    }
+
+    // ----------------------------------------------------------------
+    // 🖼️ PHOTO: SERVER-SIDE UPLOAD (Remaining Logic)
+    // ----------------------------------------------------------------
     const formData = new FormData();
     formData.append("file", uploadFile);
     formData.append("title", title);
     formData.append("description", description);
-    formData.append(
-      "skills",
-      JSON.stringify(skills.split(",").map((s) => s.trim()))
-    );
+    formData.append("skills", skills);
     formData.append("type", fileType);
 
-    const startTime = Date.now();
+    try {
+      const response = await axios.post("/admin/upload", formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (progressEvent) => {
+          const { loaded, total } = progressEvent;
+          setUploadProgress(Math.round((loaded * 100) / total));
 
-    const response = await axios.post("/admin/upload", formData, {
-      withCredentials: true,
-      headers: { "Content-Type": "multipart/form-data" },
-      onUploadProgress: (progressEvent) => {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        setUploadProgress(percentCompleted);
+          // Simple ETA for photos
+          const timeElapsed = (Date.now() - startTime) / 1000;
+          const uploadSpeed = loaded / timeElapsed;
+          const remaining = (total - loaded) / uploadSpeed;
+          if (isFinite(remaining) && remaining >= 0) {
+            setUploadEta(remaining < 60 ? `${Math.round(remaining)}s` : `${Math.round(remaining / 60)}m`);
+          }
+        },
+      });
+      toast.success(response.data.message);
+      resetForm();
+    } catch (err) {
+      toast.error("Upload Failed");
+      setLoad(false);
+      setUploadProgress(0);
+    }
+  };
 
-        // ETA Calculation (Dynamic based on real-time network speed)
-        // We calculate speed based on total bytes loaded vs total time elapsed.
-        // This automatically adjusts if network speed fluctuates.
-        const timeElapsed = (Date.now() - startTime) / 1000; // seconds
-        const uploadSpeed = progressEvent.loaded / timeElapsed; // bytes/sec
-        const remainingBytes = progressEvent.total - progressEvent.loaded;
-        const secondsRemaining = remainingBytes / uploadSpeed;
-
-        if (secondsRemaining < 60) {
-          setUploadEta(`${Math.round(secondsRemaining)}s`);
-        } else {
-          setUploadEta(`${Math.round(secondsRemaining / 60)}m`);
-        }
-      },
-    });
-
-    toast.success(response.data.message);
-
+  const resetForm = () => {
     setFile(null);
     setPreview(null);
     setFileSize(null);
+    setPosterFile(null);
+    setPosterPreview(null);
     setTitle("");
     setDescription("");
     setSkills("");
     setUploadProgress(0);
     setUploadEta(null);
+    setLoad(false);
   };
 
   const handleUpload = async (e) => {
@@ -345,6 +473,8 @@ const AdminUploads = () => {
                 setPreview(null);
                 setFile(null);
                 setFileSize(null);
+                setPosterFile(null);
+                setPosterPreview(null);
               }}
             >
               Photo
@@ -357,12 +487,59 @@ const AdminUploads = () => {
                 setPreview(null);
                 setFile(null);
                 setFileSize(null);
+                setPosterFile(null);
+                setPosterPreview(null);
               }}
             >
               Video
             </button>
           </div>
         </div>
+
+
+
+        {/* 🆕 POSTER UPLOAD (Only for Video) */}
+        {
+          fileType === "video" && (
+            <div className="form-group">
+              <label>Video Poster (Thumbnail)</label>
+              <div className={`file-drop-zone ${posterPreview ? "has-preview" : ""}`} style={{ minHeight: '120px' }}>
+                {!posterPreview && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePosterChange}
+                  />
+                )}
+
+                {posterPreview ? (
+                  <div className="preview-container">
+                    <img
+                      src={posterPreview}
+                      alt="Poster Preview"
+                      className="file-preview-image"
+                      style={{ objectFit: "cover" }}
+                    />
+                    {/* <div className="file-meta-overlay">
+                      <span>Poster</span>
+                    </div> */}
+                    <button
+                      className="remove-preview-btn"
+                      onClick={handleRemovePoster}
+                    >
+                      <i className="fi fi-sr-trash"></i>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="drop-content">
+                    <i className="fi fi-sr-picture"></i>
+                    <span>Select Cover Image</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        }
 
         <div className="form-group">
           <label>Select File</label>
@@ -433,23 +610,31 @@ const AdminUploads = () => {
           </div>
         </div>
 
-        {load && (
-          <div className="upload-progress-container" style={{ marginBottom: '20px' }}>
-            <div className="progress-info" style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '0.9rem', marginBottom: '8px' }}>
-              <span>Uploading... {uploadProgress}%</span>
-              <span>{uploadEta ? `~${uploadEta} remaining` : 'Calculating...'}</span>
-            </div>
-            <div className="progress-bar-track" style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', overflow: 'hidden' }}>
-              <div className="progress-bar-fill" style={{ width: `${uploadProgress}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #a855f7)', transition: 'width 0.3s ease' }}></div>
-            </div>
-          </div>
-        )}
+        {
+          load && (
+            <div className="upload-progress-container" style={{ marginBottom: '20px', background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div className="progress-info" style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '0.9rem', marginBottom: '10px', fontWeight: '500' }}>
+                <span style={{ color: '#fff' }}>Uploading... {uploadProgress}%</span>
+                <span>{uploadEta ? `~${uploadEta} remaining` : 'Calculating...'}</span>
+              </div>
 
-        <button type="submit" className="upload-btn" disabled={load}>
-          {load ? "Processing..." : "Upload Project"}
+              <div className="progress-bar-track" style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', overflow: 'hidden' }}>
+                <div className="progress-bar-fill" style={{ width: `${uploadProgress}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #a855f7)', transition: 'width 0.2s ease', borderRadius: '10px' }}></div>
+              </div>
+            </div>
+          )
+        }
+
+        <button type="submit" className="upload-btn" disabled={load} style={{ opacity: load ? 0.7 : 1, cursor: load ? 'not-allowed' : 'pointer' }}>
+          {load ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+              <i className="fi fi-sr-spinner-alt fi-spin"></i>
+              <span>Processing...</span>
+            </div>
+          ) : "Upload Project"}
         </button>
-      </form>
-    </div>
+      </form >
+    </div >
   );
 };
 

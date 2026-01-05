@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, NavLink, Outlet } from 'react-router-dom';
 import '../../stylesheets/admin.css';
-import AdminMessages from './AdminMessages';
-import AdminUploads from './AdminUploads';
-import AdminMedia from './AdminMedia';
 import axios from "axios"
 import { toast } from "sonner"
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState('messages');
     const navigate = useNavigate();
-
     const [isAdmin, setIsAdmin] = useState(null); // null = checking
 
     useEffect(() => {
@@ -52,23 +47,29 @@ const AdminDashboard = () => {
                     <h3>Admin Panel</h3>
                 </div>
                 <ul className="nav-links">
-                    <li
-                        className={activeTab === 'messages' ? 'active' : ''}
-                        onClick={() => setActiveTab('messages')}
-                    >
-                        Messages
+                    <li>
+                        <NavLink
+                            to="messages"
+                            className={({ isActive }) => isActive ? 'active' : ''}
+                        >
+                            Messages
+                        </NavLink>
                     </li>
-                    <li
-                        className={activeTab === 'uploads' ? 'active' : ''}
-                        onClick={() => setActiveTab('uploads')}
-                    >
-                        Uploads
+                    <li>
+                        <NavLink
+                            to="uploads"
+                            className={({ isActive }) => isActive ? 'active' : ''}
+                        >
+                            Uploads
+                        </NavLink>
                     </li>
-                    <li
-                        className={activeTab === 'media' ? 'active' : ''}
-                        onClick={() => setActiveTab('media')}
-                    >
-                        Media
+                    <li>
+                        <NavLink
+                            to="media"
+                            className={({ isActive }) => isActive ? 'active' : ''}
+                        >
+                            Media
+                        </NavLink>
                     </li>
                 </ul>
                 <div className="nav-footer">
@@ -80,9 +81,7 @@ const AdminDashboard = () => {
                 <button className="mobile-logout-btn" onClick={handleLogout} title="Logout">
                     <i className="fi fi-sr-sign-out-alt"></i>
                 </button>
-                {activeTab === 'messages' && <AdminMessages />}
-                {activeTab === 'uploads' && <AdminUploads />}
-                {activeTab === 'media' && <AdminMedia />}
+                <Outlet />
             </main>
         </div>
     );

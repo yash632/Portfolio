@@ -2,54 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { toast } from 'sonner';
 
-const MOCK_PROJECTS = [
-  {
-    id: 1,
-    title: "AstraEye: Vision for Blind",
-    description: "AI assistant for visually impaired users. Navigates obstacles using depth estimation (MiDaS) & contours.",
-    tech: ["Python", "OpenCV", "Generative AI"],
-    type: "video",
-    src: "videos/astraeye.mp4",
-    poster: "https://placehold.co/600x400/1a1a1a/00ffff?text=AstraEye"
-  },
-  {
-    id: 2,
-    title: "HennaBliss",
-    description: "Platform connecting seekers with mehndi artists. Features real-time hiring and messaging w/ Socket.IO.",
-    tech: ["MERN Stack", "Redux", "Socket.IO"],
-    type: "video",
-    src: "videos/hennabliss.mp4",
-    poster: "https://placehold.co/600x400/1a1a1a/ff00ff?text=HennaBliss"
-  },
-  {
-    id: 3,
-    title: "Vision Safe",
-    description: "Real-time surveillance system detecting faces to identify criminals or missing persons.",
-    tech: ["Flask", "YOLO", "FaceNet"],
-    type: "video",
-    src: "videos/visionsafe.mp4",
-    poster: "https://placehold.co/600x400/1a1a1a/00ffcc?text=VisionSafe"
-  },
-  {
-    id: 5,
-    title: "Project Astitva",
-    description: "Virtual human clone with lip-sync animation. Uses SadTalker, Gemini, and Coqui TTS.",
-    tech: ["Deep Learning", "Generative AI", "Python"],
-    type: "video",
-    src: "videos/astitva.mp4",
-    poster: "https://placehold.co/600x400/1a1a1a/da70d6?text=Project_Astitva"
-  }
-];
+// const MOCK_PROJECTS = [];
 
 const Project = () => {
   const [filter, setFilter] = useState('all');
-  const [projects, setProjects] = useState(MOCK_PROJECTS);
+  const [projects, setProjects] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
   // Ref to track if it's the initial mount to prevent double fetching if strict mode
-  const isInitialMount = React.useRef(true);
+  // const isInitialMount = React.useRef(true);
 
   // Fetch Logic
   const fetchProjects = async (pageNum, currentFilter) => {
@@ -62,18 +25,35 @@ const Project = () => {
         id: item.id,
         title: item.title,
         description: item.description,
-        tech: Array.isArray(item.skills) ? item.skills : (item.skills ? item.skills.split(',') : []), // Handle skills format
+        // Parse skills: handle legacy JSON strings "['A','B']" vs comma-separated "A,B"
+        tech: (() => {
+          let s = item.skills;
+          // If it's already an array, just clean the elements
+          if (Array.isArray(s)) {
+            return s.map(str => typeof str === 'string' ? str.replace(/[\[\]"']/g, '').trim() : str);
+          }
+          if (!s) return [];
+          // Check if it looks like a JSON array string
+          if (typeof s === 'string' && s.trim().startsWith('[') && s.trim().endsWith(']')) {
+            try {
+              const parsed = JSON.parse(s);
+              if (Array.isArray(parsed)) return parsed;
+            } catch (e) { }
+          }
+          // Fallback: split by comma and clean up
+          return s.split(',').map(str => str.replace(/[\[\]"']/g, '').trim()).filter(Boolean);
+        })(),
         type: item.file_type === 'photo' ? 'image' : 'video', // Map backend type to frontend
         src: item.url,
-        poster: "" // Backend might not have poster, default empty
+        poster: item.poster_url || "" // 🆕 POSTER SUPPORT
       }));
 
       setProjects(prev => {
         // Merge logic: If page 1, reset to Mock + Fetched. Else append.
         if (pageNum === 1) {
           // Filter mock data locally
-          const filteredMock = MOCK_PROJECTS.filter(p => currentFilter === 'all' || p.type === currentFilter);
-          return [...filteredMock, ...fetchedData];
+          // const filteredMock = MOCK_PROJECTS.filter(p => currentFilter === 'all' || p.type === currentFilter);
+          return [...fetchedData];
         } else {
           return [...prev, ...fetchedData];
         }
@@ -163,7 +143,7 @@ const Project = () => {
 
                 <div className="project_info">
                   <h3>{project.title}</h3>
-                  <p>{project.description}</p>
+                  <pre>{project.description}</pre>
                   <div className="tech_tags">
                     {project.tech.map((tech, index) => (
                       <span key={index}>{tech}</span>

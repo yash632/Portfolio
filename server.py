@@ -51,7 +51,7 @@ def connect_db():
         print("✅ MongoDB connected")
     except PyMongoError as e:
         mongo = None
-        print("⚠️ MongoDB connection failed:", e)
+        print("⚠️ MongoDB connection failed:")
 
 
 connect_db()
@@ -275,7 +275,7 @@ def messages():
 
         send_async_email(
             email,
-            "Message Received - Yash Rathore",
+            "We’ve received your message",
             user_html
         )
 
@@ -292,7 +292,7 @@ def messages():
 
         send_async_email(
             ADMIN_EMAIL,
-            f"Portfolio: New Message from {name}",
+            f"Portfolio: {name} Try to Connect",
             admin_html
         )
 
@@ -344,7 +344,9 @@ def fetch_media():
             "file_type": m["file_type"],
             "description": m["description"],
             "skills": m["skills"],
-            "url": m["url"]
+            "url": m["url"],
+            "poster_id": m.get("poster_id", ""),
+            "poster_url": m.get("poster_url", "")
         })
 
     return {
@@ -423,6 +425,42 @@ def get_messages():
         "data": messages
     }
 
+@app.route("/admin/generate-signature", methods=["POST"])
+def generate_signature():
+    if not require_admin_login():
+        return {"message": "Unauthorized"}, 401
+
+    try:
+        import time
+        timestamp = int(time.time())
+        folder = request.json.get("folder", "")
+        
+        params_to_sign = {
+            "timestamp": timestamp,
+        }
+        
+        if folder:
+             params_to_sign["folder"] = folder
+
+        # Generate Signature
+        signature = cloudinary.utils.api_sign_request(
+            params_to_sign, 
+            os.getenv("API_SECRET")
+        )
+
+        return {
+            "signature": signature,
+            "api_key": os.getenv("API_KEY"),
+            "cloud_name": os.getenv("CLOUD_NAME"),
+            "timestamp": timestamp,
+            "folder": folder
+        }, 200
+
+    except Exception as e:
+        print(f"Signature Generation Error: {e}")
+        return {"message": "Failed to generate signature"}, 500
+
+
 @app.route("/admin/upload", methods=["POST"])
 def upload_media():
     check_db()
@@ -437,17 +475,69 @@ def upload_media():
     raw_skills = request.form.get("skills", "")
     skills = [s.strip() for s in raw_skills.split(",") if s.strip()]
     
-    if not file or not file_type or not title or not description or not skills:
+    if not file_type or not title or not description or not skills:
         return {"message": "Enter The Complete Data."}, 400
+
+    # -----------------------------------------------
+    # 🆕 DIRECT UPLOAD HANDLING (Video Only)
+    # -----------------------------------------------
+    if file_type == "video" and request.form.get("url"):
+        
+        video_url = request.form.get("url")
+        video_id = request.form.get("id")
+        poster_url = request.form.get("poster_url", "")
+        poster_id = request.form.get("poster_id", "")
+
+        # Save metadata only
+        mongo.db.media.insert_one({
+            "title": title,
+            "file_type": file_type,
+            "description": description,
+            "skills": skills,
+            "url": video_url,
+            "id": video_id,
+            "poster_url": poster_url,
+            "poster_id": poster_id,
+            "created_at": datetime.utcnow()
+        })
+
+        return {"message": "Video meta-data saved successfully!"}, 200
     
+    # -----------------------------------------------
+    # ORIGINAL LOGIC (Photos / Server-side fallback)
+    # -----------------------------------------------
+    if not file:
+         return {"message": "No file uploaded"}, 400
+
     # Optimize image before upload
     if file_type == "photo":
         file = optimize_image(file)
+        result = cloudinary.uploader.upload(
+            file,
+            resource_type="image"
+        )
     elif file_type == "video":
+        # Fallback for video if sent via file
         result = cloudinary.uploader.upload(
             file,
             resource_type="video"
-    )
+        )
+    
+    # Handle Poster Upload (Only for Video)
+    poster_url = ""
+    poster_id = ""
+    
+    if file_type == "video":
+        poster_file = request.files.get("poster")
+        if poster_file:
+            # Optimize poster as well since it's an image
+            poster_file = optimize_image(poster_file)
+            poster_result = cloudinary.uploader.upload(
+                poster_file,
+                resource_type="image"
+            )
+            poster_url = poster_result["secure_url"]
+            poster_id = poster_result["public_id"]
 
     # result = cloudinary.uploader.upload(file)
 
@@ -457,7 +547,10 @@ def upload_media():
         "description": description,
         "skills": skills,
         "url": result["secure_url"],
-        "id": result["public_id"]
+        "id": result["public_id"],
+        "poster_url": poster_url,
+        "poster_id": poster_id,
+        "created_at": datetime.utcnow() 
     })
 
     return {"message": "Media uploaded successfully!"}, 200
@@ -533,7 +626,12 @@ def delete_media():
         return {"message": "Media not found"}, 404
 
     try:
-        cloudinary.uploader.destroy(media["id"])
+        cloudinary.uploader.destroy(media["id"], resource_type=media["file_type"]) # Explicit type usually safer
+        
+        # Delete Poster if exists
+        if media.get("poster_id"):
+             cloudinary.uploader.destroy(media["poster_id"], resource_type="image")
+
     except Exception as e:
         print(f"Error deleting from Cloudinary: {e}")
 
@@ -567,17 +665,52 @@ def edit_media():
     if not require_admin_login():
         return {"message": "unauthorized access"}, 403
 
-    data = request.json
-    media_id = data.get("_id")
+    # Use form/files instead of json
+    media_id = request.form.get("_id")
+    title = request.form.get("title")
+    description = request.form.get("description")
+    skills = request.form.get("skills") # receives as string, maybe list? In frontend it sends array or string? Form data sends string.
     
+    # Clean up skills if it's a string representation
+    if skills:
+        # If it comes as "Skill1, Skill2" string
+        skills_list = [s.strip() for s in skills.split(",") if s.strip()]
+        # If frontend sent it as JSON string, we might need json.loads, 
+        # but let's assume comma-separated string for simplicity in form data
+    else:
+        skills_list = []
+
     if not media_id:
         return {"message": "Media ID required"}, 400
 
     update_fields = {
-        "title": data.get("title"),
-        "description": data.get("description"),
-        "skills": data.get("skills")
+        "title": title,
+        "description": description,
+        "skills": skills_list
     }
+
+    # Handle Poster Update
+    poster_file = request.files.get("poster")
+    if poster_file:
+        # Find existing to delete old poster
+        current_media = mongo.db.media.find_one({"_id": ObjectId(media_id)})
+        
+        # Upload new
+        poster_file = optimize_image(poster_file)
+        poster_result = cloudinary.uploader.upload(
+            poster_file,
+            resource_type="image"
+        )
+        
+        update_fields["poster_url"] = poster_result["secure_url"]
+        update_fields["poster_id"] = poster_result["public_id"]
+
+        # Delete old if exists
+        if current_media and current_media.get("poster_id"):
+             try:
+                cloudinary.uploader.destroy(current_media["poster_id"], resource_type="image")
+             except Exception as e:
+                print(f"Failed to delete old poster: {e}")
 
     result = mongo.db.media.update_one(
         {"_id": ObjectId(media_id)},
@@ -587,7 +720,25 @@ def edit_media():
     if result.matched_count == 0:
          return {"message": "Media not found"}, 404
 
-    return {"message": "Media updated successfully!"}, 200
+    # Return updated doc or fields so frontend can update state fully
+    # Or just return success
+    return {"message": "Media updated successfully!", "poster_url": update_fields.get("poster_url", "")}, 200
+
+
+#--------------------------------------------------------
+#----------- Setup Indexes ------------------------------
+#--------------------------------------------------------
+
+@app.route("/index", methods=["GET"])
+def setup_indexes():
+    check_db()
+    db = mongo.cx.get_database()
+
+    db.message.create_index([("email", 1), ("status", 1)])
+    db.message.create_index([("ip", 1), ("created_at", -1)])
+
+    print("Indexes setup completed.")
+    return "Indexes setup completed."
 
 #-------------------------------------------------------
 #----------- React Serving Route -----------------------
@@ -605,21 +756,7 @@ def serve_react(path):
     # warna React ka index.html
     return send_from_directory(app.template_folder, "index.html")
 
-#--------------------------------------------------------
-#----------- Setup Indexes ------------------------------
-#--------------------------------------------------------
-
-def setup_indexes():
-    db = mongo.cx.get_database()
-
-    db.message.create_index([("email", 1), ("status", 1)])
-    db.message.create_index([("ip", 1), ("created_at", -1)])
-
-    print("Indexes setup completed.")
-
-
 if __name__ == "__main__":
-    setup_indexes()
 
     print("Flask server started at http://localhost:5000")
     app.run(host="0.0.0.0", port="5000", debug=True)
