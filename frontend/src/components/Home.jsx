@@ -5,6 +5,7 @@ import "../stylesheets/style.css";
 import TechSphere from "./TechSphere";
 import Portfolio from "./Portfolio";
 import { toast } from "sonner";
+import emailjs from "@emailjs/browser";
 
 const Home = () => {
   const el = useRef(null);
@@ -83,29 +84,100 @@ const Home = () => {
     };
   }, []);
 
+  // Helper to load HTML template
+  const loadTemplate = async (filename) => {
+    try {
+      const response = await fetch(`/emails/${filename}`);
+      return await response.text();
+    } catch (error) {
+      console.error("Failed to load template:", filename, error);
+      return "";
+    }
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoad(true);
     try {
+      // 1. Validate & Save to Backend
       const response = await axios.post("/messages", {
-      email,
-      name,
-      description
-    });
-    if (response.status === 200) {
-    setEmail("");
-    setName("");
-    setDescription("");
-    setWords(0);
+        email,
+        name,
+        description
+      });
+
+      if (response.status === 200 && response.data.success) {
+        const { emailjs_config, email_data } = response.data;
+        const { service_id, template_id, public_key } = emailjs_config;
+
+        // console.log("EmailJS Config:", { service_id, template_id, public_key }); // Debugging
+
+        // 3. Send User Auto-Reply
+        try {
+          let userHtml = await loadTemplate("user_auto_reply.html");
+          if (userHtml) {
+            userHtml = userHtml
+              .replace("{{ name }}", email_data.user_name)
+              .replace("{{ block_url }}", email_data.block_url)
+              .replace("{{ portfolio_url }}", email_data.portfolio_url);
+
+            await emailjs.send(service_id, template_id, {
+              to_email: email_data.user_email,
+              html: userHtml,
+              subject: "We’ve received your message",
+              from_name: "Yash Rathore"  // Explicitly set sender name
+            }, public_key);
+          }
+        } catch (err) {
+          console.error("Failed to send user email:", err);
+          // toast.error("Failed to send auto-reply.");
+        }
+
+        // 4. Send Admin Notification
+        try {
+          let adminHtml = await loadTemplate("admin_notification.html");
+          if (adminHtml) {
+            const statusClass = email_data.status_type === "NEW" ? "status-new" : "status-responded";
+
+            adminHtml = adminHtml
+              .replace("{{ status }}", email_data.status_type)
+              .replace("{{ status_class }}", statusClass)
+              .replace("{{ name }}", email_data.user_name)
+              .replace("{{ email }}", email_data.user_email)
+              .replace("{{ message_content }}", email_data.message_content);
+
+            await emailjs.send(service_id, template_id, {
+              to_email: email_data.admin_email,
+              html: adminHtml,
+              subject: `Portfolio: ${email_data.user_name} Try to Connect`
+            }, public_key);
+          }
+        } catch (err) {
+          console.error("Failed to send admin email:", err);
+        }
+
+        toast.success(response.data.message);
+        setEmail("");
+        setName("");
+        setDescription("");
+        setWords(0);
+
+      } else {
+        // Handle 200 OK but success=false if that logic existed
+                // 2. Clear Form immediately
+        setEmail("");
+        setName("");
+        setDescription("");
+        setWords(0);
+        toast.success(response.data.message);
+      }
+
+      setLoad(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something Went Wrong!");
+      setLoad(false);
     }
-    setLoad(false);
-    toast.success(response.data.message);
-  }
-  catch (error) {
-    toast.error(error.response.data.message || "Something Went Wrong!");
-    setLoad(false);
-  }
-  }
+  };
 
   // Drag Handlers
   const handleStart = (clientX) => {

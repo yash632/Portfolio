@@ -10,10 +10,18 @@ from flask_pymongo import PyMongo
 from pymongo.errors import PyMongoError
 import cloudinary, cloudinary.uploader
 
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-import ssl
+import os
+import token
+from altair import Description
+from bson import ObjectId
+from dotenv import load_dotenv
+from flask import Flask, request, render_template_string, session, send_from_directory
+
+from flask_cors import CORS
+from flask_pymongo import PyMongo
+from pymongo.errors import PyMongoError
+import cloudinary, cloudinary.uploader
+
 import threading
 from itsdangerous import URLSafeTimedSerializer
 
@@ -56,11 +64,11 @@ def connect_db():
 
 connect_db()
 
-# Email Configuration
-MAIL_USERNAME = os.getenv("MAIL_USER")
-MAIL_PASSWORD = os.getenv("MAIL_PASS")
-MAIL_SERVER = os.getenv("MAIL_HOST", "smtp.gmail.com")
-MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
+# Email Configuration (EmailJS)
+# Make sure these exist in config.env
+EMAILJS_SERVICE_ID = os.getenv("SERVICE_KEY")
+EMAILJS_TEMPLATE_ID = os.getenv("TEMPLATE_KEY")
+EMAILJS_PUBLIC_KEY = os.getenv("PUBLIC_KEY")
 ADMIN_EMAIL = "yashveers138@gmail.com"
 
 # Token Serializer
@@ -74,30 +82,6 @@ EMAIL_REGEX = r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
 
 def require_admin_login():
     return session.get("admin_logged_in") is True
-
-def send_async_email(to_email, subject, html_content):
-    """Sends an email asynchronously to avoid blocking the request."""
-    def _send():
-        try:
-            msg = MIMEMultipart("alternative")
-            msg["Subject"] = subject
-            msg["From"] = "Yash Rathore <forge.yash@gmail.com>"
-            msg["To"] = to_email
-            msg.attach(MIMEText(html_content, "html"))
-
-            context = ssl.create_default_context()
-            
-            # Use standard SMTP with starttls for Brevo (usually port 587)
-            with smtplib.SMTP(MAIL_SERVER, MAIL_PORT) as server:
-                server.starttls(context=context)
-                server.login(MAIL_USERNAME, MAIL_PASSWORD)
-                server.sendmail(MAIL_USERNAME, to_email, msg.as_string())
-            print(f"Email sent to {to_email}")
-        except Exception as e:
-            print(f"Failed to send email to {to_email}: {e}")
-
-    thread = threading.Thread(target=_send)
-    thread.start()
 
 def get_template_content(template_name):
     """Reads template file from templates directory."""
@@ -225,6 +209,8 @@ def messages():
         "status": "responded"
     })
 
+    status_type = "NEW" # Default for admin notification logic
+
     if mresponded:
         mongo.db.message.update_one(
             {"_id": mresponded["_id"]},
@@ -234,72 +220,46 @@ def messages():
                 "created_at": datetime.utcnow()
             }}
         )
-
-        admin_html = get_template_content("admin_notification.html")
-        if admin_html:
-            admin_html = admin_html.replace("{{ status }}", "RESPONDED (Updated)")
-            admin_html = admin_html.replace("{{ status_class }}", "status-responded")
-            admin_html = admin_html.replace("{{ name }}", name)
-            admin_html = admin_html.replace("{{ email }}", email)
-            admin_html = admin_html.replace("{{ message_content }}", message_content)
-
-            send_async_email(
-                ADMIN_EMAIL,
-                f"Portfolio: Reply from {name}",
-                admin_html
-            )
-
-        return {"message": "Message sent successfully!"}, 200
+        status_type = "RESPONDED"
+    else:
+        # -----------------------------
+        # 4. NEW MESSAGE
+        # -----------------------------
+        mongo.db.message.insert_one({
+            "name": name,
+            "email": email,
+            "message": message_content,
+            "status": "pending",
+            "ip": ip,
+            "created_at": datetime.utcnow()
+        })
 
     # -----------------------------
-    # 4. NEW MESSAGE
+    # PREPARE DATA FOR FRONTEND (EmailJS)
     # -----------------------------
-    mongo.db.message.insert_one({
-        "name": name,
-        "email": email,
-        "message": message_content,
-        "status": "pending",
-        "ip": ip,
-        "created_at": datetime.utcnow()
-    })
-
-    # -----------------------------
-    # USER AUTO-REPLY
-    # -----------------------------
+    
     token = generate_block_token(email)
     block_url = f"{request.host_url}block_user/{token}"
-    # block_url = f"https://ft65mrt2-5000.inc1.devtunnels.ms/block_user/{token}"
-    user_html = get_template_content("user_auto_reply.html")
-    if user_html:
-        user_html = user_html.replace("{{ name }}", name)
-        # user_html = user_html.replace("{{ message_content }}", message_content)
-        user_html = user_html.replace("{{ block_url }}", block_url)
-        user_html = user_html.replace("{{ portfolio_url }}", request.host_url)
-
-        send_async_email(
-            email,
-            "We’ve received your message",
-            user_html
-        )
-
-    # -----------------------------
-    # ADMIN NOTIFICATION
-    # -----------------------------
-    admin_html = get_template_content("admin_notification.html")
-    if admin_html:
-        admin_html = admin_html.replace("{{ status }}", "NEW")
-        admin_html = admin_html.replace("{{ status_class }}", "status-new")
-        admin_html = admin_html.replace("{{ name }}", name)
-        admin_html = admin_html.replace("{{ email }}", email)
-        admin_html = admin_html.replace("{{ message_content }}", message_content)
-
-        send_async_email(
-            ADMIN_EMAIL,
-            f"Portfolio: {name} Try to Connect",
-            admin_html
-        )
-
-    return {"message": "Message sent successfully!"}, 200
+    
+    # Return everything frontend needs to send emails
+    return {
+        "message": "Message sent successfully!",
+        "success": True,
+        "emailjs_config": {
+            "service_id": EMAILJS_SERVICE_ID,
+            "template_id": EMAILJS_TEMPLATE_ID,
+            "public_key": EMAILJS_PUBLIC_KEY
+        },
+        "email_data": {
+            "user_name": name,
+            "user_email": email,
+            "block_url": block_url,
+            "portfolio_url": request.host_url,
+            "message_content": message_content,
+            "admin_email": ADMIN_EMAIL,
+            "status_type": status_type
+        }
+    }, 200
 
 @app.route("/block_user/<token>", methods=["GET"])
 def block_user(token):
