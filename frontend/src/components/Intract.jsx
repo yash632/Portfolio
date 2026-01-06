@@ -85,7 +85,7 @@ const Intract = () => {
         <div className="home">
           <div className="nav_position" ref={nav}>
             <div className="nav">
-              <Link className="sign_link" to={"/landing"}>
+              <Link className="sign_link" to={"/home"}>
                 <div className="logo">
                   <span className="logo-signature">Yash Rathore</span>
                 </div>
