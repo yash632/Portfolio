@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../stylesheets/style.css';
 
 const projects = [
@@ -45,6 +45,37 @@ const projects = [
         image: "https://placehold.co/600x400/1a1a1a/ffffff?text=Weather"
     }
 ];
+
+const Description = ({ text }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const maxLength = 100;
+
+    if (!text) return null;
+
+    if (text.length <= maxLength) {
+        return <p>{text}</p>;
+    }
+
+    return (
+        <p>
+            {isExpanded ? text : text.slice(0, maxLength) + "..."}
+            <span
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setIsExpanded(!isExpanded);
+                }}
+                style={{
+                    color: isExpanded ? '#ef4444' : 'var(--brown)',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    marginLeft: '5px'
+                }}
+            >
+                {isExpanded ? " Read Less" : " Read More"}
+            </span>
+        </p>
+    );
+};
 
 const Portfolio = () => {
     return (

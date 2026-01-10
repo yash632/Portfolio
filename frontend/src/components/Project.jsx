@@ -4,6 +4,38 @@ import { toast } from 'sonner';
 
 // const MOCK_PROJECTS = [];
 
+const Description = ({ text }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 100; // Limit visible text to keep cards uniform
+
+  if (!text) return null;
+
+  // If text is short enough, just show it all without button
+  if (text.length <= maxLength) {
+    return <pre>{text}</pre>;
+  }
+
+  return (
+    <pre>
+      {isExpanded ? text : text.slice(0, maxLength) + "..."}
+      <span
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent card click behavior if any
+          setIsExpanded(!isExpanded);
+        }}
+        style={{
+          color: isExpanded ? '#ef4444' : 'var(--brown)',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          marginLeft: '5px'
+        }}
+      >
+        {isExpanded ? " Read Less" : " Read More"}
+      </span>
+    </pre>
+  );
+};
+
 const Project = () => {
   const [filter, setFilter] = useState('all');
   const [projects, setProjects] = useState([]);
@@ -143,7 +175,7 @@ const Project = () => {
 
                 <div className="project_info">
                   <h3>{project.title}</h3>
-                  <pre>{project.description}</pre>
+                  <Description text={project.description} />
                   <div className="tech_tags">
                     {project.tech.map((tech, index) => (
                       <span key={index}>{tech}</span>
