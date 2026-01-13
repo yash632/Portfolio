@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axios from "axios"
 import Typed from "typed.js";
 import "../stylesheets/style.css";
 import TechSphere from "./TechSphere";
@@ -28,10 +28,10 @@ const Home = () => {
     // Typed.js initialization
     const typed = new Typed(el.current, {
       strings: [
-        "Web Development",
-        "Machine Learning",
-        "Data Science",
-        "AI and Computer Vision",
+        "Web Developer",
+        "Machine Learning Engineer",
+        "Data Science Engineer",
+        "AI & Computer Vision Developer",
       ],
       typeSpeed: 50,
       backSpeed: 50,
@@ -103,7 +103,7 @@ const Home = () => {
       const response = await axios.post("/messages", {
         email,
         name,
-        description,
+        description
       });
 
       if (response.status === 200 && response.data.success) {
@@ -121,17 +121,12 @@ const Home = () => {
               .replace("{{ block_url }}", email_data.block_url)
               .replace("{{ portfolio_url }}", email_data.portfolio_url);
 
-            await emailjs.send(
-              service_id,
-              template_id,
-              {
-                to_email: email_data.user_email,
-                html: userHtml,
-                subject: "We’ve received your message",
-                from_name: "Yash Rathore", // Explicitly set sender name
-              },
-              public_key
-            );
+            await emailjs.send(service_id, template_id, {
+              to_email: email_data.user_email,
+              html: userHtml,
+              subject: "We’ve received your message",
+              from_name: "Yash Rathore"  // Explicitly set sender name
+            }, public_key);
           }
         } catch (err) {
           console.error("Failed to send user email:", err);
@@ -142,10 +137,7 @@ const Home = () => {
         try {
           let adminHtml = await loadTemplate("admin_notification.html");
           if (adminHtml) {
-            const statusClass =
-              email_data.status_type === "NEW"
-                ? "status-new"
-                : "status-responded";
+            const statusClass = email_data.status_type === "NEW" ? "status-new" : "status-responded";
 
             adminHtml = adminHtml
               .replace("{{ status }}", email_data.status_type)
@@ -154,16 +146,11 @@ const Home = () => {
               .replace("{{ email }}", email_data.user_email)
               .replace("{{ message_content }}", email_data.message_content);
 
-            await emailjs.send(
-              service_id,
-              template_id,
-              {
-                to_email: email_data.admin_email,
-                html: adminHtml,
-                subject: `Portfolio: ${email_data.user_name} Try to Connect`,
-              },
-              public_key
-            );
+            await emailjs.send(service_id, template_id, {
+              to_email: email_data.admin_email,
+              html: adminHtml,
+              subject: `Portfolio: ${email_data.user_name} Try to Connect`
+            }, public_key);
           }
         } catch (err) {
           console.error("Failed to send admin email:", err);
@@ -174,9 +161,10 @@ const Home = () => {
         setName("");
         setDescription("");
         setWords(0);
+
       } else {
         // Handle 200 OK but success=false if that logic existed
-        // 2. Clear Form immediately
+                // 2. Clear Form immediately
         setEmail("");
         setName("");
         setDescription("");
@@ -234,7 +222,7 @@ const Home = () => {
                 <h1>
                   Hi! My name is <span className="name">Yash Rathore</span>
                 </h1>
-                <div className="sub_text">I am Passionate about</div>
+                <div className="sub_text">I am Passionate</div>
                 <span ref={el} className="typing_text"></span>
               </div>
             </div>
@@ -460,13 +448,7 @@ const Home = () => {
               </h6>
             </div>
 
-            <button
-              type="submit"
-              className="send_btn"
-              id="send_btn"
-              form="requestForm"
-              disabled={load}
-            >
+            <button type="submit" className="send_btn" id="send_btn" form="requestForm" disabled={load}>
               <div>S</div>
               <div>E</div>
               <div>N</div>
