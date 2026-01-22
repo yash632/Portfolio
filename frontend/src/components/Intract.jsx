@@ -5,11 +5,11 @@ import "../stylesheets/respo.css";
 import Hero3D from "./Hero3D";
 
 // Import Page Components for Keep-Alive
-// import Home from "./Home";
-// import About from "./About";
-// import Resume from "./Resume";
+import Home from "./Home";
+import About from "./About";
+import Resume from "./Resume";
 import Project from "./Project";
-// import Contact from "./Contact";
+import Contact from "./Contact";
 
 const Intract = () => {
   const location = useLocation();
@@ -94,22 +94,22 @@ const Intract = () => {
           </div>
 
           {/* KEEP ALIVE IMPLEMENTATION: Render all, hide inactive */}
-          {/* <div style={{ display: isRoute('/home') ? 'block' : 'none' }}>
+          <div style={{ display: isRoute('/home') ? 'block' : 'none' }}>
             <Home />
           </div>
           <div style={{ display: isRoute('/about') ? 'block' : 'none' }}>
             <About />
-          </div>*/}
+          </div>
           <div style={{ display: isRoute('/project') ? 'block' : 'none' }}>
             <Project />
           </div>
-          {/* <div style={{ display: isRoute('/resume') ? 'block' : 'none' }}>
+          <div style={{ display: isRoute('/resume') ? 'block' : 'none' }}>
             <Resume />
           </div>
           <div style={{ display: isRoute('/contact') ? 'block' : 'none' }}>
             <Contact />
-          </div>  */}
-<Outlet/>
+          </div> 
+{/* <Outlet/> */}
         </div>
 
         <div className="footer_position" ref={footerNav}>
