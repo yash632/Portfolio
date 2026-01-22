@@ -1,20 +1,17 @@
 import { useEffect } from "react";
-import { useLocation, useNavigationType } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-const ScrollHandler = () => {
-  const location = useLocation();
-  const navigationType = useNavigationType(); // PUSH | POP | REPLACE
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (navigationType === "PUSH") {
-      // navbar / Link click
-      window.scrollTo(0, 0);
+    const home = document.querySelector(".home");
+    if (home) {
+      home.scrollTop = 0;
     }
-    // POP (back/forward) pe kuch mat karo
-    // browser khud restore karega
-  }, [location.pathname, navigationType]);
+  }, [pathname]); // 🔥 tab / route change detect yahin se hota hai
 
   return null;
 };
 
-export default ScrollHandler;
+export default ScrollToTop;

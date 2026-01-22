@@ -78,17 +78,25 @@
   display: block;
 }
 
-.home {
-  min-height: 100vh;
-  width: 100%;
-  margin: auto;
-}
-
 body {
   background: black;
   width: 100vw;
   height: 90vh;
   color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* .home {
+  min-height: 100vh;
+  width: 100%;
+  margin: auto;
+} */
+
+.home {
+  background: transparent;
+  height: 100vh;
+  width: calc(100vw - 250px);
+  margin: auto auto auto 250px;
   overflow-x: hidden;
 }
 
@@ -1090,13 +1098,6 @@ textarea {
   margin: auto;
 }
 
-.home {
-  background: transparent;
-  height: 100vh;
-  width: calc(100vw - 250px);
-  margin: auto auto auto 250px;
-  overflow-x: hidden;
-}
 
 .footer_position {
   position: fixed;

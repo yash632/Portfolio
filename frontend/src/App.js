@@ -13,10 +13,13 @@ import AdminMessages from './components/Admin/AdminMessages';
 import AdminUploads from './components/Admin/AdminUploads';
 import AdminMedia from './components/Admin/AdminMedia';
 import { Toaster } from "sonner";
+import { Scroll } from '@react-three/drei';
+import ScrollToTop from './components/ScrollToTop';
 
 const App = () => {
   return (
     <>
+    <ScrollToTop />
       <Toaster position="top-right" richColors />
       <Routes>
         <Route path="/admin" element={<Admin />} />

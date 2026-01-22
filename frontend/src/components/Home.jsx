@@ -213,7 +213,7 @@ const Home = () => {
       <section id="home" className="section active">
         <div
           className="front_content"
-          style={{ position: "relative", overflow: "hidden" }}
+          style={{ position: "relative", overflowX: "hidden" }}
         >
           {/* Foreground Content */}
           <div className="content_overlay">

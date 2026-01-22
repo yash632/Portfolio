@@ -618,7 +618,7 @@ const AdminUploads = () => {
                 <span>{uploadEta ? `~${uploadEta} remaining` : 'Calculating...'}</span>
               </div>
 
-              <div className="progress-bar-track" style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', overflow: 'hidden' }}>
+              <div className="progress-bar-track" style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', overflowX: 'hidden' }}>
                 <div className="progress-bar-fill" style={{ width: `${uploadProgress}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #a855f7)', transition: 'width 0.2s ease', borderRadius: '10px' }}></div>
               </div>
             </div>

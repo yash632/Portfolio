@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import "../stylesheets/style.css";
 import "../stylesheets/respo.css";
 import Hero3D from "./Hero3D";
@@ -94,22 +94,22 @@ const Intract = () => {
           </div>
 
           {/* KEEP ALIVE IMPLEMENTATION: Render all, hide inactive */}
-          <div style={{ display: isRoute('/home') ? 'block' : 'none' }}>
+          {/* <div style={{ display: isRoute('/home') ? 'block' : 'none' }}>
             <Home />
           </div>
           <div style={{ display: isRoute('/about') ? 'block' : 'none' }}>
             <About />
-          </div>
+          </div>*/}
           <div style={{ display: isRoute('/project') ? 'block' : 'none' }}>
             <Project />
           </div>
-          <div style={{ display: isRoute('/resume') ? 'block' : 'none' }}>
+          {/* <div style={{ display: isRoute('/resume') ? 'block' : 'none' }}>
             <Resume />
           </div>
           <div style={{ display: isRoute('/contact') ? 'block' : 'none' }}>
             <Contact />
-          </div>
-
+          </div>  */}
+<Outlet/>
         </div>
 
         <div className="footer_position" ref={footerNav}>

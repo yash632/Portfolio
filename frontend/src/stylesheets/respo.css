@@ -48,7 +48,7 @@
     margin: auto;
   }
 
-  .mcontainer,
+  /* .mcontainer, */
   .rcontainer,
   .acontainer,
   .acontact_body {
@@ -352,7 +352,7 @@
     transform: translateY(calc(70px * 4));
   }
 
-  .mcontainer,
+  /* .mcontainer, */
   .rcontainer,
   .acontainer,
   .about_container,
