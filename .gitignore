@@ -5,7 +5,7 @@ __pycache__/
 **/tempCodeRunnerFile.py
 /.vscode/
 desktop.ini
-
+frontend/build/
 # Environment Variables
 config.env
 .env
