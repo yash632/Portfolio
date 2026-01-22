@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unsubscribed</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020617;
+            /* Dark Slate */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(15, 23, 42, 0.6);
+            /* Glassy dark */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            /* Cyan border hint */
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Subtle glow backdrop */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            color: #94a3b8;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.4));
+        }
+
+        .close-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid #334155;
+            color: #64748b;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            border-color: #38bdf8;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <span class="icon">🔕</span>
+        <h1>Unsubscribed</h1>
+        <p>
+            You have successfully opted out. <br>
+            You will no longer receive emails from this portfolio system.
+        </p>
+        <a href="#" onclick="window.close()" class="close-btn">Close Window</a>
+    </div>
+</body>
+
+</html>
